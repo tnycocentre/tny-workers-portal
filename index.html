@@ -841,7 +841,7 @@ html, body {
             <div class="req-dot pending" id="dot-fellowship"></div>
             <div class="req-text">
               <strong>30 min daily + 1 hr weekly personal fellowship</strong>
-              <small id="sub-fellowship">Tap to log today's fellowship session</small>
+              <small id="sub-fellowship">Tap to log your weekly fellowship reflection</small>
             </div>
             <div class="req-arrow">›</div>
           </div>
@@ -1152,7 +1152,7 @@ html, body {
             <div class="pg-dot" onclick="togglePrayer(this)"></div>
             <div class="pg-dot rest">Rest</div>
           </div>
-          <button class="btn btn-yellow" style="margin-top:18px;width:100%" onclick="logTodayPrayer()">Log Today's Session</button>
+          <button class="btn btn-yellow" style="margin-top:18px;width:100%" onclick="logTodayPrayer()">Log This Week's Fellowship</button>
         </div>
         <div class="card">
           <div class="card-title">Prayer Companion ✦</div>
@@ -1652,8 +1652,7 @@ function toggleDone(el) {
   else { el.textContent = '○'; el.style.color = ''; }
 }
 function logTodayPrayer() {
-  showToast('Today\'s session logged ✓');
-  syncPrayer();
+  tickReq('fellowship');
 }
 
 function togglePrayer(el) {
@@ -2008,7 +2007,7 @@ const REQ_CONFIG = {
   hg:         { label:'Filled with Holy Ghost — evidence of tongues',        req:'Filled with Holy Ghost (tongues)',              title:'Notify Trainer — Holy Ghost', sub:'Let your trainer know you\'ve received the Holy Ghost with evidence of tongues. They will confirm this with the pastor.' },
   gospel:     { label:'Preach gospel + bring convert to church',              req:'Preach gospel + bring convert to church',        title:'Log Gospel Conversation',     sub:'Tell us about the person you spoke to. Once you bring them to church, your trainer will mark this as complete.' },
   invite:     { label:'Invite an un-churched person to church',               req:'Invite un-churched person to church',            title:'Log an Invitation',           sub:'Who did you invite? When did you invite them? Note the details here.' },
-  fellowship: { label:'30 min daily + 1 hr weekly personal fellowship',       req:'80% punctuality',                               title:'Log Fellowship Session',      sub:'Log a personal prayer and fellowship session (30 minutes or more).' }
+  fellowship: { label:'30 min daily + 1 hr weekly personal fellowship', req:'80% punctuality', title:'Log This Week\'s Fellowship', sub:'Reflect on your personal fellowship this week — how consistent were your daily 30-min sessions? What stood out in your time with God this week?' }
 };
 
 let _currentReqKey = null;
@@ -2051,6 +2050,17 @@ async function saveReqLog() {
   if (homeSub) homeSub.textContent = key === 'hg' ? 'Notified — awaiting pastor confirmation' : 'Logged — awaiting trainer confirmation';
 
   showToast('Logged ✓ Your trainer will review this');
+
+  // If fellowship, also tick today's dot on prayer grid
+  if (key === 'fellowship') {
+    const day = (new Date().getDay() + 6) % 7;
+    const dots = document.querySelectorAll('.pg-dot:not(.rest)');
+    if (dots[day] && !dots[day].classList.contains('logged')) {
+      dots[day].classList.add('logged');
+      dots[day].textContent = '✓';
+    }
+    syncPrayer();
+  }
 
   // Sync to Sheet
   if (_trainee && !_trainee.offline) {
