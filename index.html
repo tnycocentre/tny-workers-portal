@@ -687,16 +687,16 @@ html, body {
           </div>
 
           <!-- 5. Reading — auto -->
-          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>Complete both reading texts</strong><small>Tracks from Reading Plan page</small></div></div>
+          <div class="req-item"><div class="req-dot partial" id="home-dot-b1">~</div><div class="req-text"><strong>Complete both reading texts</strong><small id="home-sub-b1">Tracks from Reading Plan page</small></div></div>
 
           <!-- 6. Prayer attendance — auto -->
-          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>70% prayer time attendance</strong><small>Tracked by trainer</small></div></div>
+          <div class="req-item"><div class="req-dot partial" id="home-dot-prayer">~</div><div class="req-text"><strong>70% prayer time attendance</strong><small id="home-sub-prayer">Tracked by trainer</small></div></div>
 
           <!-- 7. Service attendance — auto -->
-          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>70% service attendance</strong><small>Tracked by trainer</small></div></div>
+          <div class="req-item"><div class="req-dot partial" id="home-dot-svc">~</div><div class="req-text"><strong>70% service attendance</strong><small id="home-sub-svc">Tracked by trainer</small></div></div>
 
           <!-- 8. Punctuality — auto -->
-          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>80% punctuality</strong><small>Tracked by trainer</small></div></div>
+          <div class="req-item"><div class="req-dot partial" id="home-dot-punc">~</div><div class="req-text"><strong>80% punctuality</strong><small id="home-sub-punc">Tracked by trainer</small></div></div>
 
           <!-- 9. Fellowship — tickable -->
           <div class="req-item req-tickable" onclick="nav('requirements',-1,null)" style="border-radius:8px;margin:0 -2px;padding:11px 2px">
@@ -711,13 +711,13 @@ html, body {
         <div>
           <div class="card" style="margin-bottom:16px">
             <div class="card-title">This Week's Focus</div>
-            <div class="focus-row">
-              <div>📖 Module: <strong>Kingdom Agenda</strong></div>
-              <div>📅 Class: <strong>Tuesday 6pm (Virtual)</strong></div>
-              <div>📚 Reading: <strong>Believer's Authority Ch. 3–4</strong></div>
-              <div>✏️ Quiz due: <strong style="color:var(--pink)">Friday</strong></div>
+            <div class="focus-row" id="week-focus-content">
+              <div>📖 Module: <strong id="wf-module">—</strong></div>
+              <div>📅 Week: <strong id="wf-week">—</strong></div>
+              <div>📚 Reading: <strong id="wf-reading">—</strong></div>
+              <div>✏️ Programme: <strong id="wf-progress" style="color:var(--blue)">—</strong></div>
             </div>
-            <button class="btn btn-yellow" style="margin-top:16px;width:100%" onclick="nav('tutor',2,null)">Open AI Tutor ✦</button>
+            <button class="btn btn-yellow" style="margin-top:16px;width:100%" onclick="openModFromWeek()">Open AI Tutor ✦</button>
           </div>
           <div class="card card-0">
             <div class="card-title">Spiritual Streak</div>
@@ -848,22 +848,6 @@ html, body {
       </div>
     </div>
 
-    <!-- REQ LOG MODAL -->
-    <div id="req-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;align-items:flex-end;justify-content:center">
-      <div style="background:var(--white);border-radius:20px 20px 0 0;width:100%;max-width:560px;padding:28px 24px 36px;animation:slideUp .25s ease">
-        <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px"></div>
-        <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:var(--cream);margin-bottom:4px" id="req-modal-title">Log Requirement</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:16px" id="req-modal-sub">Add a note about what happened</div>
-        <textarea id="req-modal-note" placeholder="Add details here…"
-          style="width:100%;background:var(--deep);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:var(--cream);outline:none;resize:none;height:90px;margin-bottom:14px"
-          onfocus="this.style.borderColor='var(--yellow)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-        <div style="display:flex;gap:10px">
-          <button class="btn btn-outline" style="flex:1" onclick="closeReqModal()">Cancel</button>
-          <button class="btn btn-yellow" style="flex:2" onclick="saveReqLog()">Log It ✓</button>
-        </div>
-      </div>
-    </div>
-
     <!-- ── CURRICULUM ── -->
     <div class="page" id="p-curriculum">
       <div class="ph"><h2>Curriculum</h2><p>6 modules · 3 months · tap a module to read its outline.</p></div>
@@ -884,34 +868,34 @@ html, body {
         <!-- LEFT: Module list -->
         <div class="cur-list">
           <div class="cur-mod-btn active" id="cmb-1" onclick="openCurMod(1)">
-            <div class="cur-mod-num done">✓</div>
+            <div class="cur-mod-num" id="cnum-1">1</div>
             <div class="cur-mod-info"><strong>Module 1</strong><span>Understanding Your Spirituality</span></div>
-            <div class="mod-badge mb-done">Done</div>
+            <div class="mod-badge" id="cbadge-1">Month 1</div>
           </div>
           <div class="cur-mod-btn" id="cmb-2" onclick="openCurMod(2)">
-            <div class="cur-mod-num">2</div>
+            <div class="cur-mod-num" id="cnum-2">2</div>
             <div class="cur-mod-info"><strong>Module 2</strong><span>Kingdom Agenda</span></div>
-            <div class="mod-badge mb-now">Now</div>
+            <div class="mod-badge" id="cbadge-2">Month 1</div>
           </div>
           <div class="cur-mod-btn" id="cmb-3" onclick="openCurMod(3)">
-            <div class="cur-mod-num">3</div>
+            <div class="cur-mod-num" id="cnum-3">3</div>
             <div class="cur-mod-info"><strong>Module 3</strong><span>Self Leadership &amp; Accountability</span></div>
-            <div class="mod-badge mb-next">Month 2</div>
+            <div class="mod-badge" id="cbadge-3">Month 2</div>
           </div>
           <div class="cur-mod-btn" id="cmb-4" onclick="openCurMod(4)">
-            <div class="cur-mod-num">4</div>
+            <div class="cur-mod-num" id="cnum-4">4</div>
             <div class="cur-mod-info"><strong>Module 4</strong><span>Technical Training &amp; Orientation</span></div>
-            <div class="mod-badge mb-next">Month 2</div>
+            <div class="mod-badge" id="cbadge-4">Month 2</div>
           </div>
           <div class="cur-mod-btn" id="cmb-5" onclick="openCurMod(5)">
-            <div class="cur-mod-num">5</div>
+            <div class="cur-mod-num" id="cnum-5">5</div>
             <div class="cur-mod-info"><strong>Module 5</strong><span>Etiquette</span></div>
-            <div class="mod-badge mb-next">Month 3</div>
+            <div class="mod-badge" id="cbadge-5">Month 3</div>
           </div>
           <div class="cur-mod-btn" id="cmb-6" onclick="openCurMod(6)">
-            <div class="cur-mod-num">6</div>
+            <div class="cur-mod-num" id="cnum-6">6</div>
             <div class="cur-mod-info"><strong>Module 6</strong><span>Wisdom</span></div>
-            <div class="mod-badge mb-next">Month 3</div>
+            <div class="mod-badge" id="cbadge-6">Month 3</div>
           </div>
         </div>
 
@@ -930,8 +914,8 @@ html, body {
         <div>
           <div style="background:var(--yellow-lt);border:1px solid var(--yellow-border);border-radius:10px;padding:13px 16px;margin-bottom:14px">
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);font-weight:700;margin-bottom:4px">Current Module</div>
-            <div style="font-size:14px;font-weight:700;color:var(--cream)">Module 2: Kingdom Agenda</div>
-            <div style="font-size:12px;color:var(--muted);margin-top:2px">Why we serve · Heart for service</div>
+            <div style="font-size:14px;font-weight:700;color:var(--cream)" id="tutor-cur-mod">—</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px" id="tutor-cur-sub">Loading…</div>
           </div>
           <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px">Try asking</div>
           <div style="display:flex;flex-direction:column;gap:6px">
@@ -1012,7 +996,7 @@ html, body {
 
           <div class="card card-0" style="border-top:3px solid var(--blue)">
             <div style="font-size:11px;font-weight:800;color:var(--blue);margin-bottom:2px">Book 1 — Midway</div>
-            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Believer's Authority · Week 4</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">The Believer's Authority · After Week 4</div>
             <div id="j-b1mid-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
             <div id="j-b1mid-form">
               <textarea class="journal-ta" id="j-b1mid-q1" placeholder="Most important thing learned so far?"></textarea>
@@ -1025,7 +1009,7 @@ html, body {
 
           <div class="card card-0" style="border-top:3px solid var(--pink)">
             <div style="font-size:11px;font-weight:800;color:var(--pink);margin-bottom:2px">Book 2 — Midway</div>
-            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Led by the Spirit · Week 10</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">How to be Led by the Spirit · After Week 10</div>
             <div id="j-b2mid-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
             <div id="j-b2mid-form">
               <textarea class="journal-ta" id="j-b2mid-q1" placeholder="What is the inward witness, in your own words?"></textarea>
@@ -1043,7 +1027,7 @@ html, body {
 
           <div class="card card-0" style="border-top:3px solid var(--blue)">
             <div style="font-size:11px;font-weight:800;color:var(--blue);margin-bottom:2px">Book 1 — Final</div>
-            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Believer's Authority · Week 7</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">The Believer's Authority · End of Week 7</div>
             <div id="j-b1final-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
             <div id="j-b1final-form">
               <textarea class="journal-ta" id="j-b1final-q1" placeholder="Your single biggest takeaway from this book?"></textarea>
@@ -1056,7 +1040,7 @@ html, body {
 
           <div class="card card-0" style="border-top:3px solid var(--pink)">
             <div style="font-size:11px;font-weight:800;color:var(--pink);margin-bottom:2px">Book 2 — Final</div>
-            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Led by the Spirit · Week 12</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">How to be Led by the Spirit · End of Week 12</div>
             <div id="j-b2final-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
             <div id="j-b2final-form">
               <textarea class="journal-ta" id="j-b2final-q1" placeholder="Your single biggest takeaway from this book?"></textarea>
@@ -1264,8 +1248,8 @@ async function loginTrainee() {
     if (result.error) throw new Error(result.error);
     _trainee = { id: result.traineeId, name };
     localStorage.setItem('tny_trainee', JSON.stringify(_trainee));
-    await loadDashboard();
     hideLogin();
+    loadDashboard(); // non-blocking
   } catch(e) {
     _trainee = { id: 'OFFLINE-' + Date.now(), name, offline: true };
     localStorage.setItem('tny_trainee', JSON.stringify(_trainee));
@@ -1286,24 +1270,39 @@ function logout() {
   location.reload();
 }
 
-async function loadDashboard() {
+async function loadDashboard(forceRefresh) {
   if (!_trainee || _trainee.offline || DB_URL.includes('PASTE_YOUR')) return;
+
+  // Use cached data if fresh (within 5 minutes) — avoids slow Sheet call every load
+  const cacheKey = 'tny_dash_' + _trainee.id;
+  const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+  const now = Date.now();
+  if (!forceRefresh && cached && (now - cached.ts) < 5 * 60 * 1000) {
+    applyDashboardData(cached.data);
+    return;
+  }
+
   try {
     const data = await dbGet({ action:'getDashboard', traineeId:_trainee.id });
     if (data.error) return;
-    const s = data.scores;
-    setStatLive('stat-overall',      s.overall,      'fb');
-    setStatLive('stat-services',     s.services,     s.services >= 70 ? 'fg' : 'fw');
-    setStatLive('stat-prayer',       s.prayer,       s.prayer >= 70 ? 'fg' : 'fw');
-    setStatLive('stat-punctuality',  s.punctuality,  s.punctuality >= 80 ? 'fg' : 'fw');
-    if (data.requirements?.length) renderLiveReqs(data.requirements);
-    if (data.reading) {
-      setBookPct('book1', data.reading.book1Pct);
-      setBookPct('book2', data.reading.book2Pct);
-      if (data.reading.completedDays) data.reading.completedDays.forEach(k => { _done[k] = true; });
-    }
-    if (data.quizzes?.length) renderQuizHistory(data.quizzes);
+    localStorage.setItem(cacheKey, JSON.stringify({ ts: now, data }));
+    applyDashboardData(data);
   } catch(e) {}
+}
+
+function applyDashboardData(data) {
+  const s = data.scores;
+  setStatLive('stat-overall',     s.overall,     'fb');
+  setStatLive('stat-services',    s.services,    s.services >= 70 ? 'fg' : 'fw');
+  setStatLive('stat-prayer',      s.prayer,      s.prayer >= 70 ? 'fg' : 'fw');
+  setStatLive('stat-punctuality', s.punctuality, s.punctuality >= 80 ? 'fg' : 'fw');
+  if (data.requirements?.length) renderLiveReqs(data.requirements);
+  if (data.reading) {
+    setBookPct('book1', data.reading.book1Pct);
+    setBookPct('book2', data.reading.book2Pct);
+    if (data.reading.completedDays) data.reading.completedDays.forEach(k => { _done[k] = true; });
+  }
+  if (data.quizzes?.length) renderQuizHistory(data.quizzes);
 }
 
 function setStatLive(id, val, cls) {
@@ -1319,13 +1318,53 @@ function setBookPct(book, pct) {
 }
 
 function renderLiveReqs(reqs) {
-  document.querySelectorAll('.req-list-live').forEach(container => {
-    container.innerHTML = reqs.map(r => {
-      const cls = r.Status==='done'?'done':r.Status==='partial'?'partial':'pending';
-      const icon = r.Status==='done'?'✓':r.Status==='partial'?'~':'';
-      const sub = r.Evidence || (r.Status==='done'?'Completed':r.Status==='partial'?'In Progress':'Not yet completed');
-      return `<div class="req-item"><div class="req-dot ${cls}">${icon}</div><div class="req-text"><strong>${r.Requirement}</strong><small>${sub}</small></div></div>`;
-    }).join('');
+  // Map requirement strings to dot IDs (trainee portal uses key-based dots)
+  const reqKeyMap = {
+    'Saved — confessing Christ':                    null, // locked, don't touch
+    'Filled with Holy Ghost (tongues)':             'hg',
+    'Preach gospel + bring convert to church':      'gospel',
+    'Invite un-churched person to church':          'invite',
+    "Book 1 (Believer\'s Authority) completed":    null, // auto
+    'Book 2 (Led by the Spirit) completed':         null, // auto
+    '70% prayer time attendance':                   null, // auto
+    '70% service attendance':                       null, // auto
+    '80% punctuality':                              'fellowship'
+  };
+
+  reqs.forEach(r => {
+    const key = reqKeyMap[r.Requirement];
+    if (!key) return; // auto or locked — skip
+    const dot = document.getElementById('dot-' + key);
+    const sub = document.getElementById('sub-' + key);
+    const homeDot = document.getElementById('home-dot-' + key);
+    const homeSub = document.getElementById('home-sub-' + key);
+    const cls  = r.Status==='done'?'req-dot done':r.Status==='partial'?'req-dot partial':'req-dot pending';
+    const icon = r.Status==='done'?'✓':r.Status==='partial'?'~':'';
+    const txt  = r.Evidence || (r.Status==='done'?'Completed':r.Status==='partial'?'In Progress':'Not yet logged');
+    if (dot) { dot.className = cls; dot.textContent = icon; }
+    if (sub) sub.textContent = txt;
+    if (homeDot) { homeDot.className = cls; homeDot.textContent = icon; }
+    if (homeSub) homeSub.textContent = txt;
+  });
+
+  // Also update auto requirements (reading, attendance, punctuality) on dashboard
+  const autoMap = {
+    '70% service attendance':                    ['home-dot-svc',    'home-sub-svc'],
+    '70% prayer time attendance':                ['home-dot-prayer',  'home-sub-prayer'],
+    '80% punctuality':                           ['home-dot-punc',    'home-sub-punc'],
+    "Book 1 (Believer\'s Authority) completed": ['home-dot-b1',      'home-sub-b1'],
+    'Book 2 (Led by the Spirit) completed':      ['home-dot-b2',      'home-sub-b2']
+  };
+  reqs.forEach(r => {
+    const ids = autoMap[r.Requirement];
+    if (!ids) return;
+    const dot = document.getElementById(ids[0]);
+    const sub = document.getElementById(ids[1]);
+    const cls  = r.Status==='done'?'req-dot done':r.Status==='partial'?'req-dot partial':'req-dot pending';
+    const icon = r.Status==='done'?'✓':r.Status==='partial'?'~':'';
+    const txt  = r.Evidence || (r.Status==='partial'?'In progress':'Not yet');
+    if (dot) { dot.className = cls; dot.textContent = icon; }
+    if (sub) sub.textContent = txt;
   });
 }
 
@@ -1342,7 +1381,10 @@ function renderQuizHistory(quizzes) {
 
 async function syncPrayer() {
   if (!_trainee || _trainee.offline || DB_URL.includes('PASTE_YOUR')) return;
-  try { await dbPost({ action:'logPrayer', traineeId:_trainee.id, traineeName:_trainee.name, date:new Date().toISOString().split('T')[0], sessionType:'Personal Fellowship', duration:30 }); } catch(e) {}
+  try {
+    await dbPost({ action:'logPrayer', traineeId:_trainee.id, traineeName:_trainee.name, date:new Date().toISOString().split('T')[0], sessionType:'Personal Fellowship', duration:30 });
+    loadDashboard(true); // refresh cache after action
+  } catch(e) {}
 }
 
 async function syncReading(weekNum, dayIdx, book, completed) {
@@ -1606,6 +1648,101 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
+// ── TRAINING WEEK CALCULATOR ──
+// Set this to the Monday the training programme starts
+const TRAINING_START = new Date('2026-07-07'); // ← UPDATE THIS DATE before launch
+
+const MODULE_SCHEDULE = [
+  { mod:1, name:'Understanding Your Spirituality', sub:'Man is a Spirit · Tongues · Gifts & Fruits',       weeks:[1,2,3,4] },
+  { mod:2, name:'Kingdom Agenda',                  sub:'Why We Serve · Three Loves · Commitment',           weeks:[4,5] },
+  { mod:3, name:'Self Leadership & Accountability',sub:'Lead Yourself First · Renew Your Mind',             weeks:[6,7] },
+  { mod:4, name:'Technical Training & Orientation',sub:'Excellence as Worship · Art of the Work',           weeks:[8,9] },
+  { mod:5, name:'Etiquette',                       sub:'Conduct · Dress · Communication',                   weeks:[10,11] },
+  { mod:6, name:'Wisdom',                          sub:'Train Your Spirit · Wise Decisions',                weeks:[11,12] }
+];
+
+const READING_SCHEDULE = [
+  'The Believer\'s Authority — Ch. 1',
+  'The Believer\'s Authority — Ch. 2–3',
+  'The Believer\'s Authority — Ch. 4–5',
+  'The Believer\'s Authority — Ch. 6–7',
+  'The Believer\'s Authority — Ch. 8',
+  'Book 1 Review + Led by the Spirit — Intro',
+  'Led by the Spirit — Ch. 3–6',
+  'Led by the Spirit — Ch. 7–10',
+  'Led by the Spirit — Ch. 11–16',
+  'Led by the Spirit — Ch. 17–22',
+  'Led by the Spirit — Ch. 23–27',
+  'Led by the Spirit — Ch. 28–29'
+];
+
+function getTrainingWeek() {
+  const now = new Date();
+  const diff = now - TRAINING_START;
+  const week = Math.floor(diff / (7 * 24 * 60 * 60 * 1000)) + 1;
+  return Math.max(1, Math.min(12, week));
+}
+
+function getCurrentModule(week) {
+  for (const m of MODULE_SCHEDULE) {
+    if (m.weeks.includes(week)) return m;
+  }
+  return MODULE_SCHEDULE[MODULE_SCHEDULE.length - 1];
+}
+
+function updateModuleStatuses() {
+  const week = getTrainingWeek();
+  const curMod = getCurrentModule(week);
+
+  // Update curriculum module buttons
+  MODULE_SCHEDULE.forEach(m => {
+    const btn    = document.getElementById('cmb-' + m.mod);
+    const num    = document.getElementById('cnum-' + m.mod);
+    const badge  = document.getElementById('cbadge-' + m.mod);
+    if (!btn || !num || !badge) return;
+
+    const maxWeek = Math.max(...m.weeks);
+    const minWeek = Math.min(...m.weeks);
+    const isDone    = week > maxWeek;
+    const isCurrent = m.mod === curMod.mod;
+
+    if (isDone) {
+      num.className   = 'cur-mod-num done'; num.textContent = '✓';
+      badge.className = 'mod-badge mb-done'; badge.textContent = 'Done';
+    } else if (isCurrent) {
+      num.className   = 'cur-mod-num'; num.textContent = m.mod;
+      badge.className = 'mod-badge mb-now'; badge.textContent = 'Now';
+    } else if (week < minWeek) {
+      num.className   = 'cur-mod-num'; num.textContent = m.mod;
+      const mo = minWeek <= 4 ? 'Month 1' : minWeek <= 8 ? 'Month 2' : 'Month 3';
+      badge.className = 'mod-badge mb-next'; badge.textContent = mo;
+    }
+  });
+
+  // Update This Week's Focus card
+  const wfMod     = document.getElementById('wf-module');
+  const wfWeek    = document.getElementById('wf-week');
+  const wfReading = document.getElementById('wf-reading');
+  const wfProg    = document.getElementById('wf-progress');
+  if (wfMod)     wfMod.textContent     = curMod.name;
+  if (wfWeek)    wfWeek.textContent    = `Week ${week} of 12`;
+  if (wfReading) wfReading.textContent = READING_SCHEDULE[week-1] || '—';
+  if (wfProg)    wfProg.textContent    = `${Math.round(week/12*100)}% through programme`;
+
+  // Update AI Tutor current module display
+  const tutorMod = document.getElementById('tutor-cur-mod');
+  const tutorSub = document.getElementById('tutor-cur-sub');
+  if (tutorMod) tutorMod.textContent = `Module ${curMod.mod}: ${curMod.name}`;
+  if (tutorSub) tutorSub.textContent = curMod.sub;
+}
+
+function openModFromWeek() {
+  const week = getTrainingWeek();
+  const mod  = getCurrentModule(week);
+  nav('tutor', 2, null);
+  setTimeout(() => openMod(mod.mod), 200);
+}
+
 // ── CURRICULUM SIDE PANEL ──
 const CUR_MODS = {
   1: {
@@ -1807,6 +1944,7 @@ function switchCurTab(n, tabIdx) {
 // Init curriculum panel on first load
 document.addEventListener('DOMContentLoaded', () => {
   openCurMod(1);
+  updateModuleStatuses();
 
 // ── READING JOURNAL ──
 async function submitJournal(key, label) {
@@ -2013,5 +2151,21 @@ function toggleWkDay(key, el) {
   }
 });
 </script>
+<!-- REQ LOG MODAL -->
+<div id="req-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:700;align-items:flex-end;justify-content:center;padding:0">
+  <div style="background:var(--white);border-radius:20px 20px 0 0;width:100%;max-width:560px;padding:28px 24px 36px;animation:slideUp .25s ease">
+    <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px"></div>
+    <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:#111;margin-bottom:4px" id="req-modal-title">Log Requirement</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px" id="req-modal-sub">Add a note about what happened</div>
+    <textarea id="req-modal-note" placeholder="Add details here…"
+      style="width:100%;background:var(--deep);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:#111;outline:none;resize:none;height:90px;margin-bottom:14px"
+      onfocus="this.style.borderColor='var(--yellow)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeReqModal()">Cancel</button>
+      <button class="btn btn-yellow" style="flex:2" onclick="saveReqLog()">Log It ✓</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
