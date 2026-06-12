@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Worker Training Portal — TNY</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Backgrounds */
+  --deep:    #F5F3EF;
+  --panel:   #FFFFFF;
+  /* Yellow — stays bold */
+  --yellow:  #F5C800;
+  --yellow-dk: #C9A000;
+  --yellow-lt: #FFFBE6;
+  --yellow-border: rgba(201,160,0,0.3);
+  /* Accent */
+  --blue:  #1C3FD4;
+  --blue-lt: #EEF1FD;
+  --pink:  #F0187A;
+  --pink-lt: #FDE8F2;
+  /* Text */
+  --cream:  #111111;
+  --muted:  #777777;
+  --white:  #FFFFFF;
+  /* Semantic */
+  --success: #1A9E6A;
+  --warn:    #E06020;
+  --border:  #E2DDD6;
+  --card-border: #E8E4DC;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  background: var(--deep);
+  color: var(--cream);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+  position: fixed; left:0; top:0; bottom:0;
+  width: 240px;
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 100;
+  transition: transform 0.28s ease;
+}
+
+.sidebar-logo {
+  padding: 24px 20px 18px;
+  border-bottom: 2px solid var(--yellow);
+  background: #111111;
+}
+.sidebar-logo .wordmark {
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px; font-weight: 800;
+  color: var(--yellow);
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+.sidebar-logo .sub {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.45); margin-top: 4px;
+}
+
+.sidebar-nav { flex:1; padding: 16px 0; overflow-y: auto; }
+
+.nav-section {
+  padding: 8px 16px 4px;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px; cursor: pointer;
+  font-size: 13.5px; color: var(--muted);
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  background: transparent; border-top:none; border-bottom:none; border-right:none;
+  width: 100%; text-align: left;
+  font-family: 'Manrope', sans-serif; font-weight: 500;
+}
+.nav-item:hover { color: #111; background: var(--yellow-lt); }
+.nav-item.active { color: #111; border-left-color: var(--yellow); background: var(--yellow-lt); font-weight: 700; }
+.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+/* Sidebar trainee pill at bottom */
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+.trainee-pill {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--yellow-lt);
+  border: 1px solid var(--yellow-border);
+  border-radius: 40px;
+  padding: 7px 14px 7px 8px;
+  font-size: 13px; color: var(--cream); font-weight: 600;
+}
+.avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: var(--cream);
+  flex-shrink: 0;
+}
+
+/* ===================== MAIN ===================== */
+.main {
+  margin-left: 240px;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+.topbar {
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--white);
+  position: sticky; top:0; z-index:50;
+  box-shadow: 0 1px 0 var(--border);
+}
+.page-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px; font-weight: 800; color: var(--cream);
+  letter-spacing: -0.3px;
+}
+
+.content { flex:1; padding: 32px 36px; overflow-y: auto; }
+
+/* ===================== PAGES ===================== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===================== HERO BANNER ===================== */
+.welcome-banner {
+  background: linear-gradient(135deg, #1A1A2E 0%, #0D1225 50%, #1A0D20 100%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.welcome-banner::before {
+  content: '✦';
+  position: absolute; right: 32px; top: 50%; transform: translateY(-50%);
+  font-size: 90px; color: rgba(245,200,0,0.06);
+  pointer-events: none;
+}
+.welcome-banner::after {
+  content: '';
+  position: absolute; right: -30px; bottom: -30px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: var(--pink); opacity: 0.05;
+}
+.welcome-banner .greeting { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--yellow); margin-bottom: 8px; font-weight: 700; }
+.welcome-banner h2 { font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; color: var(--white); margin-bottom: 6px; letter-spacing: -0.5px; }
+.welcome-banner p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+.month-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--yellow-lt); border: 1px solid var(--yellow-border);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; color: var(--yellow); margin-top: 14px; font-weight: 600;
+}
+
+/* ===================== STAT CARDS ===================== */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--card-border);
+  border-radius: 14px; padding: 20px;
+  box-shadow: var(--shadow);
+}
+.stat-card .sc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+.stat-card .sc-val { font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 800; color: var(--cream); line-height: 1; letter-spacing: -1px; }
+.stat-card .sc-val span { font-size: 15px; color: var(--muted); font-weight: 500; }
+.stat-card .sc-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.pbar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+.pbar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+.fy { background: var(--yellow); }
+.fb { background: var(--blue); }
+.fp { background: var(--pink); }
+.fg { background: var(--success); }
+.fw { background: var(--warn); }
+
+/* ===================== TWO / THREE COL ===================== */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* ===================== CARDS ===================== */
+.card {
+  background: var(--white);
+  border: 1px solid var(--card-border);
+  border-radius: 16px; padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.card-0 { margin-bottom: 0; }
+.card-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--cream);
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title .ct-sub { font-size: 11px; color: var(--muted); font-weight: 500; }
+
+/* ===================== REQUIREMENTS ===================== */
+.req-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.req-item:last-child { border-bottom: none; padding-bottom: 0; }
+.req-dot {
+  width: 24px; height: 24px; border-radius: 50%; border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; flex-shrink: 0; margin-top: 1px; font-weight: 700;
+}
+.req-dot.done { background: var(--success); border-color: var(--success); color: #fff; }
+.req-dot.partial { background: var(--yellow-lt); border-color: var(--yellow-dk); color: var(--yellow-dk); }
+.req-dot.pending { background: var(--deep); border-color: var(--border); color: transparent; }
+.req-text strong { font-size: 13.5px; color: var(--cream); display: block; font-weight: 500; }
+.req-text small { font-size: 12px; color: var(--muted); }
+
+/* ===================== WEEK FOCUS CARD ===================== */
+.focus-row { font-size: 13px; color: var(--muted); line-height: 1.9; }
+.focus-row strong { color: var(--cream); font-weight: 600; }
+
+/* ===================== MODULE ITEMS ===================== */
+.mod-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--white); border: 1.5px solid var(--card-border);
+  border-radius: 12px; padding: 14px 18px; margin-bottom: 10px;
+  cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow);
+}
+.mod-item:hover { border-color: var(--yellow); transform: translateY(-1px); }
+.mod-item.current { border-color: var(--yellow); border-width: 2px; }
+.mod-num {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 800;
+  color: var(--white); flex-shrink: 0;
+}
+.mod-num.done { background: var(--success); color: #fff; font-size: 14px; }
+.mod-info { flex: 1; min-width: 0; }
+.mod-info strong { font-size: 13.5px; color: var(--cream); display: block; font-weight: 600; }
+.mod-info span { font-size: 11.5px; color: var(--muted); }
+.mod-badge { font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 700; white-space: nowrap; }
+.mb-done { background: rgba(76,175,130,0.12); color: var(--success); }
+.mb-now { background: var(--yellow-lt); color: var(--yellow); border: 1px solid var(--yellow-border); }
+.mb-next { background: var(--deep); color: var(--muted); }
+
+/* ===================== AI CHAT ===================== */
+.chat-box {
+  background: var(--deep);
+  border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 16px;
+  min-height: 180px; max-height: 360px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;
+}
+.bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.55; }
+.bubble.user {
+  background: #111111; border: none;
+  color: var(--white); align-self: flex-end; border-bottom-right-radius: 3px;
+}
+.bubble.ai {
+  background: var(--white); border: 1px solid var(--card-border);
+  color: var(--cream); align-self: flex-start; border-bottom-left-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.bubble.ai .ai-tag { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--pink); font-weight: 700; margin-bottom: 4px; display: block; }
+
+.typing-ind {
+  background: var(--white); border: 1px solid var(--card-border);
+  border-radius: 12px; border-bottom-left-radius: 3px;
+  padding: 10px 14px; align-self: flex-start;
+  display: flex; gap: 4px; align-items: center;
+}
+.typing-ind span {
+  width: 6px; height: 6px; background: var(--cream);
+  border-radius: 50%; animation: tbounce 1.2s infinite; opacity: 0.5;
+}
+.typing-ind span:nth-child(2){animation-delay:.18s}
+.typing-ind span:nth-child(3){animation-delay:.36s}
+@keyframes tbounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+.chat-row { display: flex; gap: 8px; }
+.chat-inp {
+  flex: 1; background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+  font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--cream);
+  outline: none; transition: border-color 0.2s;
+}
+.chat-inp:focus { border-color: var(--cream); }
+.chat-inp::placeholder { color: var(--muted); }
+
+/* ===================== BUTTONS ===================== */
+.btn {
+  border: none; border-radius: 8px; cursor: pointer;
+  font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 13px;
+  padding: 10px 20px; transition: all 0.18s; letter-spacing: 0.1px;
+}
+.btn-yellow { background: var(--yellow); color: var(--deep); }
+.btn-yellow:hover { background: var(--yellow-dk); }
+.btn-yellow:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-outline {
+  background: transparent; border: 1.5px solid var(--border);
+  color: var(--cream);
+}
+.btn-outline:hover { border-color: var(--cream); }
+
+/* ===================== CHIPS ===================== */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.chip {
+  background: var(--yellow-lt); border: 1px solid var(--yellow-border);
+  border-radius: 20px; padding: 5px 12px;
+  font-size: 12px; color: var(--yellow-dk); cursor: pointer;
+  font-family: 'Manrope', sans-serif; font-weight: 600;
+  transition: all 0.15s;
+}
+.chip:hover { background: var(--yellow); color: var(--cream); }
+
+/* ===================== READING ===================== */
+.reading-week { margin-bottom: 18px; }
+.week-hd {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--yellow-dk); font-weight: 700;
+  padding-bottom: 8px; border-bottom: 2px solid var(--yellow);
+  margin-bottom: 10px; display: block;
+}
+.r-day { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.r-day:last-child { border-bottom: none; }
+.day-pill {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--yellow-lt); border: 1px solid var(--yellow-border);
+  color: var(--yellow); font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.r-day-content { flex: 1; }
+.r-day-content strong { font-size: 13px; color: var(--cream); font-weight: 500; display: block; }
+.r-day-content span { font-size: 12px; color: var(--muted); }
+.done-tog { font-size: 18px; cursor: pointer; padding: 4px; flex-shrink: 0; color: var(--muted); line-height: 1; }
+
+/* ===================== QUIZ ===================== */
+.quiz-opt {
+  background: var(--deep); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+  cursor: pointer; font-size: 13.5px; color: var(--cream);
+  transition: all 0.18s;
+}
+.quiz-opt:hover { border-color: var(--yellow-border); background: var(--yellow-lt); }
+.quiz-opt.correct { border-color: var(--success); background: rgba(26,158,106,0.08); color: var(--success); pointer-events:none; }
+.quiz-opt.wrong { border-color: #D94040; background: rgba(217,64,64,0.1); color: #D94040; pointer-events:none; }
+
+/* ===================== PRAYER GRID ===================== */
+.prayer-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; text-align: center; }
+.pg-lbl { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.pg-dot {
+  width: 100%; aspect-ratio: 1; border-radius: 50%;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  background: var(--deep); transition: all 0.15s;
+}
+.pg-dot.logged { background: var(--yellow); border-color: var(--yellow-dk); color: var(--deep); }
+.pg-dot.rest { background: var(--blue-lt); border-color: rgba(28,63,212,0.2); color: var(--blue); font-size: 9px; cursor: default; }
+
+/* ===================== FORM ===================== */
+.form-sel {
+  background: var(--deep); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 10px 13px;
+  font-size: 13px; font-family: 'Manrope', sans-serif; color: var(--cream);
+  outline: none; width: 100%; transition: border-color 0.2s;
+}
+.form-sel:focus { border-color: var(--cream); }
+
+/* ===================== SECTION HEADING ===================== */
+.ph h2 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: var(--cream); margin-bottom: 4px; letter-spacing: -0.3px; }
+.ph p { font-size: 13px; color: var(--muted); }
+.ph { margin-bottom: 20px; }
+
+/* ===================== STREAK MINI ===================== */
+.streak-num { font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 800; color: var(--yellow); letter-spacing: -1px; line-height: 1; }
+
+/* ── ACCORDION ── */
+.mod-acc-item { background:var(--white); border:1.5px solid var(--card-border); box-shadow:var(--shadow); border-radius:14px; margin-bottom:10px; overflow:hidden; transition:border-color 0.2s; }
+.mod-acc-item.current-mod { border-color:var(--yellow-border); }
+.mod-acc-hd { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; transition:background 0.15s; }
+.mod-acc-hd:hover { background:var(--yellow-lt); }
+.acc-arrow { font-size:12px; color:var(--muted); transition:transform 0.2s; flex-shrink:0; }
+.acc-arrow.open { transform:rotate(90deg); color:var(--yellow); }
+.mod-acc-body { padding:0 16px 16px; }
+.theme-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.theme-card { background:var(--deep); border:1px solid var(--border); border-radius:10px; padding:10px 12px; text-align:center; }
+.tc-icon { font-size:20px; margin-bottom:4px; }
+.tc-label { font-size:11.5px; font-weight:600; color:var(--cream); line-height:1.3; }
+.tc-ref { font-size:10px; color:var(--muted); margin-top:3px; }
+.hagin-quote { background:var(--yellow-lt); border-left:3px solid var(--yellow); border-radius:6px; padding:10px 13px; font-size:12px; color:var(--cream); font-style:italic; line-height:1.55; }
+
+/* ── WEEK SELECTOR ── */
+.week-selector { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+.wk-btn { width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--card-border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; transition:all 0.18s; font-family:'Manrope',sans-serif; }
+.wk-btn:hover { border-color:var(--yellow-border); color:var(--cream); }
+.wk-btn.active { background:var(--yellow); border-color:var(--yellow); color:var(--deep); }
+.wk-btn.wk-b2 { border-color:rgba(240,24,122,0.2); }
+.wk-btn.wk-b2.active { background:var(--pink); border-color:var(--pink); color:#fff; }
+.wk-btn.wk-b2:hover { border-color:var(--pink); }
+.week-card { background:var(--white); border:1.5px solid var(--card-border); box-shadow:var(--shadow); border-radius:14px; padding:18px; }
+.wc-num { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--yellow); font-weight:700; margin-bottom:4px; }
+.wc-title { font-size:15px; font-weight:800; color:var(--cream); letter-spacing:-0.3px; margin-bottom:2px; }
+.wc-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
+.wk-day { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+.wk-day:last-child { border-bottom:none; }
+.wk-day-pill { width:32px; height:32px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; }
+.wk-day-pill.mon { background:var(--yellow-lt); color:var(--yellow); }
+.wk-day-pill.wed { background:rgba(28,63,212,0.15); color:var(--blue); }
+.wk-day-pill.fri { background:rgba(240,24,122,0.1); color:var(--pink); }
+.wk-day-content { flex:1; }
+.wk-day-content strong { font-size:13px; color:var(--cream); font-weight:600; display:block; margin-bottom:2px; }
+.wk-day-content span { font-size:12px; color:var(--muted); line-height:1.5; display:block; }
+.wk-done { font-size:18px; cursor:pointer; color:var(--muted); flex-shrink:0; padding:4px; line-height:1; }
+
+/* ── API KEY MODAL ── */
+
+/* ── TICKABLE REQUIREMENTS ── */
+.req-tickable { cursor:pointer; transition:background 0.15s; border-radius:8px; margin:0 -8px; padding-left:8px; padding-right:8px; }
+.req-tickable:hover { background:var(--yellow-lt); }
+.req-tickable:active { background:rgba(245,200,0,0.2); }
+.req-tag { font-size:10px; color:var(--muted); padding:2px 8px; background:var(--deep); border-radius:20px; white-space:nowrap; flex-shrink:0; }
+.req-tag-auto { background:var(--blue-lt); color:var(--blue); }
+.req-arrow { font-size:18px; color:var(--yellow); flex-shrink:0; font-weight:700; }
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ===================== TOAST ===================== */
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(16px); background:var(--panel); border:1px solid var(--border); color:var(--cream); padding:10px 22px; border-radius:10px; font-size:13px; font-weight:600; opacity:0; transition:all 0.3s; z-index:500; white-space:nowrap; pointer-events:none; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(245,200,0,0.2);border-radius:2px}
+
+/* ===================== MOBILE ===================== */
+@media (max-width: 767px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .topbar { padding: 14px 18px; }
+  .content { padding: 18px 16px 90px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr 1fr; }
+  .welcome-banner { padding: 24px 20px; }
+  .welcome-banner h2 { font-size: 22px; }
+  .bnav { display: flex; }
+  .menu-btn { display: flex !important; }
+}
+
+@media (min-width: 768px) {
+  .bnav { display: none; }
+  .menu-btn { display: none !important; }
+}
+
+/* BOTTOM NAV (mobile) */
+.bnav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #111111; border-top: 2px solid var(--yellow);
+  z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+}
+.bnav-inner { display: flex; }
+.bnav-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px 4px 8px; gap: 3px;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--muted); transition: color 0.2s;
+  font-family: 'Manrope', sans-serif;
+}
+.bnav-btn .bi { font-size: 18px; line-height: 1; }
+.bnav-btn .bl { font-size: 10px; font-weight: 600; }
+.bnav-btn.active { color: var(--yellow); }
+
+/* Hamburger (mobile only) */
+.menu-btn {
+  background: var(--yellow-lt); border: 1px solid var(--yellow-border); border-radius: 8px;
+  width: 36px; height: 36px; display: none;
+  align-items: center; justify-content: center;
+  cursor: pointer; color: var(--cream); font-size: 18px; font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--deep);z-index:600;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:var(--white);border-radius:20px;padding:36px 28px;max-width:400px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.12);border-top:4px solid var(--yellow)">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="background:#111;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;margin-bottom:14px">
+        <span style="color:var(--yellow);font-size:24px;font-weight:800">T</span>
+      </div>
+      <div style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:800;color:#111;margin-bottom:4px">TNY Workers Portal</div>
+      <div style="font-size:13px;color:var(--muted)">3-Month Training Programme · Cohort 1</div>
+    </div>
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px">Your Full Name</div>
+    <input id="login-name" type="text" placeholder="e.g. Funmi Adeyemi"
+      style="width:100%;background:var(--deep);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'Manrope',sans-serif;color:#111;outline:none;margin-bottom:14px;"
+      onkeydown="if(event.key==='Enter')loginTrainee()"
+      onfocus="this.style.borderColor='var(--yellow)'" onblur="this.style.borderColor='var(--border)'">
+    <div id="login-error" style="display:none;font-size:12px;color:var(--warn);margin-bottom:10px;padding:8px 12px;background:var(--warn-lt,#FDF0E8);border-radius:8px"></div>
+    <button id="login-btn" onclick="loginTrainee()"
+      style="width:100%;background:var(--yellow);border:none;border-radius:10px;padding:13px;font-size:15px;font-family:'Manrope',sans-serif;font-weight:800;color:#111;cursor:pointer;letter-spacing:-0.2px">
+      Enter Portal ✦
+    </button>
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5">Enter your name exactly as given to your trainer.<br>Your progress is saved automatically.</div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app-shell" style="display:none">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ===================== SIDEBAR ===================== -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="wordmark">TNY Workers</div>
+    <div class="sub">3-Month Programme</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section">Overview</div>
+    <button class="nav-item active" onclick="nav('home',0,this)"><span class="icon">⬡</span> My Dashboard</button>
+    <button class="nav-item" onclick="nav('requirements',-1,this)"><span class="icon">◎</span> Requirements</button>
+
+    <div class="nav-section" style="margin-top:10px">Learning</div>
+    <button class="nav-item" onclick="nav('curriculum',1,this)"><span class="icon">❋</span> Curriculum</button>
+    <button class="nav-item" onclick="nav('tutor',2,this)"><span class="icon">✦</span> AI Tutor</button>
+    <button class="nav-item" onclick="nav('reading',-1,this)"><span class="icon">◈</span> Reading Plan</button>
+    <button class="nav-item" onclick="nav('quiz',3,this)"><span class="icon">◇</span> Quiz</button>
+
+    <div class="nav-section" style="margin-top:10px">Spiritual</div>
+    <button class="nav-item" onclick="nav('prayer',4,this)"><span class="icon">◉</span> Prayer Log</button>
+  </div>
+  <div class="sidebar-footer">
+    <div class="trainee-pill">
+      <div class="avatar trainee-initials">TW</div>
+      <span class="trainee-name-display">Trainee Worker</span>
+    </div>
+    <div onclick="logout()" style="margin-top:10px;font-size:11px;color:var(--muted);cursor:pointer;text-align:center;padding:4px">Sign out ↩</div>
+  </div>
+</nav>
+
+<!-- ===================== MAIN ===================== -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="menu-btn" onclick="openSidebar()">☰</button>
+      <div class="page-title" id="page-title">My Dashboard</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--success);display:inline-block"></span>
+      Month 1 of 3
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="page active" id="p-home">
+      <div class="welcome-banner">
+        <div class="greeting">Welcome back</div>
+        <h2>Grow. Serve. Flourish.</h2>
+        <p>You are on a journey to becoming a fully equipped worker in God's kingdom.</p>
+        <div class="month-badge">✦ Month 1 of 3 — Foundations</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" id="stat-overall">
+          <div class="sc-label">Overall Progress</div>
+          <div class="sc-val">34<span>%</span></div>
+          <div class="sc-sub">Towards full onboarding</div>
+          <div class="pbar"><div class="pbar-fill fb" style="width:34%"></div></div>
+        </div>
+        <div class="stat-card" id="stat-services">
+          <div class="sc-label">Service Attendance</div>
+          <div class="sc-val">—<span>%</span></div>
+          <div class="sc-sub">Target: 70%</div>
+          <div class="pbar"><div class="pbar-fill fg" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card" id="stat-prayer">
+          <div class="sc-label">Prayer Attendance</div>
+          <div class="sc-val">—<span>%</span></div>
+          <div class="sc-sub">Target: 70%</div>
+          <div class="pbar"><div class="pbar-fill fw" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card" id="stat-punctuality">
+          <div class="sc-label">Punctuality</div>
+          <div class="sc-val">—<span>%</span></div>
+          <div class="sc-sub">Target: 80%</div>
+          <div class="pbar"><div class="pbar-fill fy" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Onboarding Requirements <span class="ct-sub" id="home-req-count">0 of 9 met</span></div>
+
+          <!-- 1. Saved — done -->
+          <div class="req-item"><div class="req-dot done">✓</div><div class="req-text"><strong>Saved &amp; confessing Christ</strong><small>Confirmed on enrolment</small></div></div>
+
+          <!-- 2. Holy Ghost — pending, tickable -->
+          <div class="req-item req-tickable" onclick="nav('requirements',-1,null)" style="border-radius:8px;margin:0 -2px;padding:11px 2px">
+            <div class="req-dot pending" id="home-dot-hg"></div>
+            <div class="req-text"><strong>Filled with Holy Ghost — tongues</strong><small id="home-sub-hg">Not yet — tap Requirements to log</small></div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <!-- 3. Gospel — pending, tickable -->
+          <div class="req-item req-tickable" onclick="nav('requirements',-1,null)" style="border-radius:8px;margin:0 -2px;padding:11px 2px">
+            <div class="req-dot pending" id="home-dot-gospel"></div>
+            <div class="req-text"><strong>Preach gospel + bring convert</strong><small id="home-sub-gospel">Not yet logged — tap to update</small></div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <!-- 4. Invite — pending, tickable -->
+          <div class="req-item req-tickable" onclick="nav('requirements',-1,null)" style="border-radius:8px;margin:0 -2px;padding:11px 2px">
+            <div class="req-dot pending" id="home-dot-invite"></div>
+            <div class="req-text"><strong>Invite un-churched person</strong><small id="home-sub-invite">Not yet logged — tap to update</small></div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <!-- 5. Reading — auto -->
+          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>Complete both reading texts</strong><small>Tracks from Reading Plan page</small></div></div>
+
+          <!-- 6. Prayer attendance — auto -->
+          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>70% prayer time attendance</strong><small>Tracked by trainer</small></div></div>
+
+          <!-- 7. Service attendance — auto -->
+          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>70% service attendance</strong><small>Tracked by trainer</small></div></div>
+
+          <!-- 8. Punctuality — auto -->
+          <div class="req-item"><div class="req-dot partial">~</div><div class="req-text"><strong>80% punctuality</strong><small>Tracked by trainer</small></div></div>
+
+          <!-- 9. Fellowship — tickable -->
+          <div class="req-item req-tickable" onclick="nav('requirements',-1,null)" style="border-radius:8px;margin:0 -2px;padding:11px 2px">
+            <div class="req-dot pending" id="home-dot-fellowship"></div>
+            <div class="req-text"><strong>Daily fellowship (30 min / 1 hr)</strong><small id="home-sub-fellowship">Not yet logged — tap to update</small></div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <button class="btn btn-outline" style="margin-top:12px;width:100%;font-size:13px" onclick="nav('requirements',-1,null)">View &amp; update all requirements →</button>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">This Week's Focus</div>
+            <div class="focus-row">
+              <div>📖 Module: <strong>Kingdom Agenda</strong></div>
+              <div>📅 Class: <strong>Tuesday 6pm (Virtual)</strong></div>
+              <div>📚 Reading: <strong>Believer's Authority Ch. 3–4</strong></div>
+              <div>✏️ Quiz due: <strong style="color:var(--pink)">Friday</strong></div>
+            </div>
+            <button class="btn btn-yellow" style="margin-top:16px;width:100%" onclick="nav('tutor',2,null)">Open AI Tutor ✦</button>
+          </div>
+          <div class="card card-0">
+            <div class="card-title">Spiritual Streak</div>
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="text-align:center">
+                <div class="streak-num">12</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">Day streak</div>
+              </div>
+              <div style="flex:1;font-size:12px;color:var(--muted);line-height:1.9">
+                Daily fellowship: <strong style="color:var(--cream)">4/7 days</strong><br>
+                Morning prayers: <strong style="color:var(--cream)">5/7</strong><br>
+                Night prayers: <strong style="color:var(--cream)">4/7</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REQUIREMENTS ── -->
+    <div class="page" id="p-requirements">
+      <div class="ph"><h2>Onboarding Requirements</h2><p>All 9 must be met before you are fully onboarded as a worker.</p></div>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;color:var(--muted)">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:var(--yellow);border:1px solid var(--yellow-dk)"></div> You can tick this</div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:var(--blue-lt);border:1px solid rgba(28,63,212,0.3)"></div> Updates automatically</div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:var(--border)"></div> Confirmed by trainer/pastor</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card" style="padding:14px">
+
+          <!-- 1. Saved — trainer confirmed, locked -->
+          <div class="req-item">
+            <div class="req-dot done">✓</div>
+            <div class="req-text"><strong>Must be saved</strong><small>Confirmed on enrolment</small></div>
+            <div class="req-tag">Trainer</div>
+          </div>
+
+          <!-- 2. Holy Ghost — tickable by trainee, confirmed by pastor -->
+          <div class="req-item req-tickable" id="req-hg" onclick="tickReq('hg')">
+            <div class="req-dot pending" id="dot-hg"></div>
+            <div class="req-text">
+              <strong>Filled with Holy Ghost — evidence of tongues</strong>
+              <small id="sub-hg">Tap to notify your trainer when you receive</small>
+            </div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <!-- 3. Gospel — tickable -->
+          <div class="req-item req-tickable" id="req-gospel" onclick="tickReq('gospel')">
+            <div class="req-dot pending" id="dot-gospel"></div>
+            <div class="req-text">
+              <strong>Preach gospel to one person &amp; bring them to church</strong>
+              <small id="sub-gospel">Tap to log a gospel conversation</small>
+            </div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <!-- 4. Invite unchurched — tickable -->
+          <div class="req-item req-tickable" id="req-invite" onclick="tickReq('invite')">
+            <div class="req-dot pending" id="dot-invite"></div>
+            <div class="req-text">
+              <strong>Invite an un-churched person to church</strong>
+              <small id="sub-invite">Tap to log an invitation</small>
+            </div>
+            <div class="req-arrow">›</div>
+          </div>
+
+          <!-- 5. Reading — auto from reading page -->
+          <div class="req-item">
+            <div class="req-dot partial">~</div>
+            <div class="req-text"><strong>Complete both reading texts</strong><small>Tracks from your Reading Plan ticks</small></div>
+            <div class="req-tag req-tag-auto">Auto</div>
+          </div>
+
+          <!-- 6. Prayer attendance — auto -->
+          <div class="req-item">
+            <div class="req-dot partial">~</div>
+            <div class="req-text"><strong>70% attendance at prayer times</strong><small>Logged by trainer from attendance records</small></div>
+            <div class="req-tag req-tag-auto">Auto</div>
+          </div>
+
+          <!-- 7. Service attendance — auto -->
+          <div class="req-item">
+            <div class="req-dot partial">~</div>
+            <div class="req-text"><strong>70% at Sunday, Tuesday &amp; Friday services</strong><small>Logged by trainer from attendance records</small></div>
+            <div class="req-tag req-tag-auto">Auto</div>
+          </div>
+
+          <!-- 8. Punctuality — auto -->
+          <div class="req-item">
+            <div class="req-dot partial">~</div>
+            <div class="req-text"><strong>80% punctuality score</strong><small>Logged by trainer from attendance records</small></div>
+            <div class="req-tag req-tag-auto">Auto</div>
+          </div>
+
+          <!-- 9. Personal fellowship — tickable -->
+          <div class="req-item req-tickable" id="req-fellowship" onclick="tickReq('fellowship')">
+            <div class="req-dot pending" id="dot-fellowship"></div>
+            <div class="req-text">
+              <strong>30 min daily + 1 hr weekly personal fellowship</strong>
+              <small id="sub-fellowship">Tap to log today's fellowship session</small>
+            </div>
+            <div class="req-arrow">›</div>
+          </div>
+
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-title">Ask the AI Guide ✦</div>
+            <div class="chips">
+              <div class="chip" onclick="askReq('What requirements are still outstanding and what should I prioritise first?')">What's left for me?</div>
+              <div class="chip" onclick="askReq('How can I improve my prayer attendance practically this week?')">Improve prayer</div>
+              <div class="chip" onclick="askReq('Give me practical tips for inviting an un-churched friend to church naturally.')">Invite tips</div>
+              <div class="chip" onclick="askReq('How do I approach a gospel conversation and what should I say?')">Gospel conversation</div>
+            </div>
+            <div class="chat-box" id="req-chat">
+              <div class="bubble ai"><span class="ai-tag">AI Guide</span>You have 9 requirements before full onboarding. The ones with a › arrow you can tick yourself. Ask me anything about completing them.</div>
+            </div>
+            <div class="chat-row">
+              <input class="chat-inp" id="req-inp" placeholder="Ask about a requirement…" onkeydown="if(event.key==='Enter')askReq()">
+              <button class="btn btn-yellow" onclick="askReq()">Ask</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REQ LOG MODAL -->
+    <div id="req-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;align-items:flex-end;justify-content:center">
+      <div style="background:var(--white);border-radius:20px 20px 0 0;width:100%;max-width:560px;padding:28px 24px 36px;animation:slideUp .25s ease">
+        <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px"></div>
+        <div style="font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:var(--cream);margin-bottom:4px" id="req-modal-title">Log Requirement</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px" id="req-modal-sub">Add a note about what happened</div>
+        <textarea id="req-modal-note" placeholder="Add details here…"
+          style="width:100%;background:var(--deep);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;font-family:'Manrope',sans-serif;color:var(--cream);outline:none;resize:none;height:90px;margin-bottom:14px"
+          onfocus="this.style.borderColor='var(--yellow)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-outline" style="flex:1" onclick="closeReqModal()">Cancel</button>
+          <button class="btn btn-yellow" style="flex:2" onclick="saveReqLog()">Log It ✓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CURRICULUM ── -->
+    <div class="page" id="p-curriculum">
+      <div class="ph"><h2>Curriculum</h2><p>6 modules · 3 months · tap any module to explore.</p></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <div onclick="nav('reading',-1,null)" style="cursor:pointer;background:rgba(28,63,212,0.12);border:1px solid rgba(28,63,212,0.25);border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px">
+          <div style="font-size:22px">📘</div>
+          <div><div style="font-size:12px;font-weight:700;color:var(--cream)">The Believer's Authority</div><div style="font-size:11px;color:var(--muted)">K. E. Hagin · Weeks 1–7 →</div></div>
+        </div>
+        <div onclick="nav('reading',-1,null)" style="cursor:pointer;background:rgba(240,24,122,0.08);border:1px solid rgba(240,24,122,0.2);border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px">
+          <div style="font-size:22px">📗</div>
+          <div><div style="font-size:12px;font-weight:700;color:var(--cream)">Led by the Spirit of God</div><div style="font-size:11px;color:var(--muted)">K. E. Hagin · Weeks 8–12 →</div></div>
+        </div>
+      </div>
+
+      <div id="mod-accordion">
+
+        <div class="mod-acc-item" id="macc-1">
+          <div class="mod-acc-hd" onclick="toggleMod(1)">
+            <div class="mod-num done" style="flex-shrink:0">✓</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 1 — Understanding Your Spirituality</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 1 · Man is a Spirit · Tongues · Gifts &amp; Fruits</div>
+            </div>
+            <div class="mod-badge mb-done" style="flex-shrink:0">Done</div>
+            <div class="acc-arrow" id="arr-1">▸</div>
+          </div>
+          <div class="mod-acc-body" id="body-1" style="display:none">
+            <div class="theme-grid">
+              <div class="theme-card"><div class="tc-icon">🔥</div><div class="tc-label">You are a spirit</div><div class="tc-ref">Gen 1:26 · John 4:24</div></div>
+              <div class="theme-card"><div class="tc-icon">🗣️</div><div class="tc-label">Tongues builds inner man</div><div class="tc-ref">1 Cor 14:4 · Jude 20</div></div>
+              <div class="theme-card"><div class="tc-icon">🎁</div><div class="tc-label">9 Gifts — tools for service</div><div class="tc-ref">1 Cor 12:7–11</div></div>
+              <div class="theme-card"><div class="tc-icon">🌱</div><div class="tc-label">9 Fruits — grown, not given</div><div class="tc-ref">Gal 5:22–23</div></div>
+            </div>
+            <div class="hagin-quote">"Your spirit prays when you pray in tongues... the spirit of man is the candle of the Lord." — Hagin, Led by the Spirit Ch. 4</div>
+            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(1)">Explore with AI Tutor ✦</button>
+          </div>
+        </div>
+
+        <div class="mod-acc-item current-mod" id="macc-2">
+          <div class="mod-acc-hd" onclick="toggleMod(2)">
+            <div class="mod-num" style="flex-shrink:0">2</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 2 — Kingdom Agenda</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 1 · Why We Serve · Three Loves · Commitment</div>
+            </div>
+            <div class="mod-badge mb-now" style="flex-shrink:0">Now</div>
+            <div class="acc-arrow" id="arr-2">▸</div>
+          </div>
+          <div class="mod-acc-body" id="body-2" style="display:none">
+            <div class="theme-grid">
+              <div class="theme-card"><div class="tc-icon">💛</div><div class="tc-label">Love compels, not duty</div><div class="tc-ref">2 Cor 5:14</div></div>
+              <div class="theme-card"><div class="tc-icon">⛓️</div><div class="tc-label">Saved from spiritual death</div><div class="tc-ref">Eph 2:1–10</div></div>
+              <div class="theme-card"><div class="tc-icon">🌍</div><div class="tc-label">Love God · World · Self</div><div class="tc-ref">Matt 22:37–39</div></div>
+              <div class="theme-card"><div class="tc-icon">🔒</div><div class="tc-label">Commitment = consistency</div><div class="tc-ref">Luke 9:62</div></div>
+            </div>
+            <div class="hagin-quote">"Conditions exist because we permit them to." — Hagin, Believer's Authority Ch. 4</div>
+            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(2)">Explore with AI Tutor ✦</button>
+          </div>
+        </div>
+
+        <div class="mod-acc-item" id="macc-3">
+          <div class="mod-acc-hd" onclick="toggleMod(3)">
+            <div class="mod-num" style="flex-shrink:0;background:rgba(28,63,212,0.5)">3</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 3 — Self Leadership &amp; Accountability</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 2 · Lead Yourself First · Renew Your Mind</div>
+            </div>
+            <div class="mod-badge mb-next" style="flex-shrink:0">Month 2</div>
+            <div class="acc-arrow" id="arr-3">▸</div>
+          </div>
+          <div class="mod-acc-body" id="body-3" style="display:none">
+            <div class="theme-grid">
+              <div class="theme-card"><div class="tc-icon">🏆</div><div class="tc-label">Self-governance first</div><div class="tc-ref">Prov 16:32</div></div>
+              <div class="theme-card"><div class="tc-icon">💪</div><div class="tc-label">Body under subjection</div><div class="tc-ref">1 Cor 9:27</div></div>
+              <div class="theme-card"><div class="tc-icon">🧠</div><div class="tc-label">Renew your mind</div><div class="tc-ref">Rom 12:2</div></div>
+              <div class="theme-card"><div class="tc-icon">🤝</div><div class="tc-label">Accountability = gift</div><div class="tc-ref">Prov 27:17</div></div>
+            </div>
+            <div class="hagin-quote">"The inward man must dominate the outward man — not the other way around." — Hagin, Led by the Spirit Ch. 6</div>
+            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(3)">Explore with AI Tutor ✦</button>
+          </div>
+        </div>
+
+        <div class="mod-acc-item" id="macc-4">
+          <div class="mod-acc-hd" onclick="toggleMod(4)">
+            <div class="mod-num" style="flex-shrink:0;background:rgba(28,63,212,0.5)">4</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 4 — Technical Training &amp; Orientation</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 2 · Excellence as Worship · Art of the Work</div>
+            </div>
+            <div class="mod-badge mb-next" style="flex-shrink:0">Month 2</div>
+            <div class="acc-arrow" id="arr-4">▸</div>
+          </div>
+          <div class="mod-acc-body" id="body-4" style="display:none">
+            <div class="theme-grid">
+              <div class="theme-card"><div class="tc-icon">⚒️</div><div class="tc-label">Spirit-filled excellence</div><div class="tc-ref">Ex 31:3</div></div>
+              <div class="theme-card"><div class="tc-icon">🙌</div><div class="tc-label">Work as unto the Lord</div><div class="tc-ref">Col 3:23–24</div></div>
+              <div class="theme-card"><div class="tc-icon">🫡</div><div class="tc-label">Submit to leadership</div><div class="tc-ref">Heb 13:17</div></div>
+              <div class="theme-card"><div class="tc-icon">🕊️</div><div class="tc-label">Conflict God's way</div><div class="tc-ref">Matt 18:15</div></div>
+            </div>
+            <div class="hagin-quote">"All the authority that can be exercised on earth must be exercised through the Church — Christ is not here in person." — Hagin, Believer's Authority Ch. 4</div>
+            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(4)">Explore with AI Tutor ✦</button>
+          </div>
+        </div>
+
+        <div class="mod-acc-item" id="macc-5">
+          <div class="mod-acc-hd" onclick="toggleMod(5)">
+            <div class="mod-num" style="flex-shrink:0;background:rgba(240,24,122,0.5)">5</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 5 — Etiquette</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 3 · Conduct · Dress · Communication</div>
+            </div>
+            <div class="mod-badge mb-next" style="flex-shrink:0">Month 3</div>
+            <div class="acc-arrow" id="arr-5">▸</div>
+          </div>
+          <div class="mod-acc-body" id="body-5" style="display:none">
+            <div class="theme-grid">
+              <div class="theme-card"><div class="tc-icon">👑</div><div class="tc-label">Above reproach</div><div class="tc-ref">1 Tim 3:2</div></div>
+              <div class="theme-card"><div class="tc-icon">✨</div><div class="tc-label">Good life before the world</div><div class="tc-ref">1 Pet 2:12</div></div>
+              <div class="theme-card"><div class="tc-icon">💬</div><div class="tc-label">Life-giving speech</div><div class="tc-ref">Prov 18:21</div></div>
+              <div class="theme-card"><div class="tc-icon">📱</div><div class="tc-label">Digital as testimony</div><div class="tc-ref">1 Cor 10:31</div></div>
+            </div>
+            <div class="hagin-quote">"Unless you keep a tender conscience, spiritual things will be indistinct to you." — Hagin, Led by the Spirit Ch. 16</div>
+            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(5)">Explore with AI Tutor ✦</button>
+          </div>
+        </div>
+
+        <div class="mod-acc-item" id="macc-6">
+          <div class="mod-acc-hd" onclick="toggleMod(6)">
+            <div class="mod-num" style="flex-shrink:0;background:rgba(240,24,122,0.5)">6</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 6 — Wisdom</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 3 · Train Your Spirit · Wise Decisions · Long Game</div>
+            </div>
+            <div class="mod-badge mb-next" style="flex-shrink:0">Month 3</div>
+            <div class="acc-arrow" id="arr-6">▸</div>
+          </div>
+          <div class="mod-acc-body" id="body-6" style="display:none">
+            <div class="theme-grid">
+              <div class="theme-card"><div class="tc-icon">🔦</div><div class="tc-label">Fear of Lord = foundation</div><div class="tc-ref">Prov 9:10</div></div>
+              <div class="theme-card"><div class="tc-icon">📖</div><div class="tc-label">Meditate + Practise Word</div><div class="tc-ref">Josh 1:8</div></div>
+              <div class="theme-card"><div class="tc-icon">🧭</div><div class="tc-label">The inward witness</div><div class="tc-ref">Prov 20:27</div></div>
+              <div class="theme-card"><div class="tc-icon">📈</div><div class="tc-label">Continuous learning</div><div class="tc-ref">Ecc 10:10</div></div>
+            </div>
+            <div class="hagin-quote">"The inward witness is just as supernatural as guidance through visions — it is just not as spectacular." — Hagin, Led by the Spirit Ch. 7</div>
+            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(6)">Explore with AI Tutor ✦</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+        <!-- ── AI TUTOR ── -->
+    <div class="page" id="p-tutor">
+      <div class="ph"><h2>AI Tutor ✦</h2><p>Ask anything about your modules, reading texts, or faith journey.</p></div>
+      <div class="two-col">
+        <div>
+          <div style="background:var(--yellow-lt);border:1px solid var(--yellow-border);border-radius:10px;padding:13px 16px;margin-bottom:14px">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);font-weight:700;margin-bottom:4px">Current Module</div>
+            <div style="font-size:14px;font-weight:700;color:var(--cream)">Module 2: Kingdom Agenda</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Why we serve · Heart for service</div>
+          </div>
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px">Try asking</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="chip" style="border-radius:8px;text-align:left" onclick="askTutor('Hagin says we have been seated with Christ in heavenly places (Eph 2:6). What does this mean practically for how I serve at TNY?')">Seated with Christ — what does it mean?</div>
+            <div class="chip" style="border-radius:8px;text-align:left" onclick="askTutor('Explain Hagin\'s three ways God leads us — inward witness, inward voice, and voice of the Holy Spirit — and how I can develop sensitivity to each.')">Hagin's 3 ways God leads</div>
+            <div class="chip" style="border-radius:8px;text-align:left" onclick="askTutor('Hagin says praying in tongues keeps the spirit in contact with the Father of spirits and makes us more spirit-conscious. How do I build this into my daily life as a TNY worker?')">Tongues and spirit-consciousness</div>
+            <div class="chip" style="border-radius:8px;text-align:left" onclick="askTutor('What is the difference between the gifts and fruits of the Spirit, and why does Hagin say gifts without fruit can be dangerous?')">Gifts vs Fruits — the real difference</div>
+            <div class="chip" style="border-radius:8px;text-align:left" onclick="askTutor('Hagin says conditions exist because we permit them to. What authority do I have as a TNY worker and how do I exercise it without going into excess?')">My authority as a believer</div>
+            <div class="chip" style="border-radius:8px;text-align:left" onclick="askTutor('Walk me through Hagin\'s 4 rules for training the human spirit and give me a practical weekly routine I can follow during this training programme.')">Train my spirit — Hagin's 4 rules</div>
+          </div>
+        </div>
+        <div>
+          <div class="chat-box" id="tutor-chat" style="max-height:400px">
+            <div class="bubble ai"><span class="ai-tag">AI Tutor</span>Shalom! I'm your training companion for this 3-month journey. Ask me anything about the curriculum, the reading texts, or how to grow as you prepare to serve.</div>
+          </div>
+          <div class="chat-row">
+            <input class="chat-inp" id="tutor-inp" placeholder="Ask your tutor anything…" onkeydown="if(event.key==='Enter')askTutor()">
+            <button class="btn btn-yellow" id="tutor-btn" onclick="askTutor()">Ask ✦</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── READING PLAN ── -->
+    <div class="page" id="p-reading">
+      <div class="ph"><h2>Reading Plan</h2><p>12 weeks · 2 books · Mon / Wed / Fri rhythm.</p></div>
+
+      <!-- Book progress cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+        <div class="card card-0" style="border:1.5px solid rgba(28,63,212,0.35);padding:16px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);font-weight:700;margin-bottom:6px">📘 Book 1 · Weeks 1–7</div>
+          <div style="font-weight:800;font-size:13px;color:var(--cream);line-height:1.3;margin-bottom:8px">The Believer's Authority</div>
+          <div class="pbar"><div class="pbar-fill fb" id="book1-pbar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between"><span id="book1-pct">Loading…</span><span>Weeks 1–7</span></div>
+        </div>
+        <div class="card card-0" style="border:1.5px solid rgba(240,24,122,0.3);padding:16px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--pink);font-weight:700;margin-bottom:6px">📗 Book 2 · Weeks 8–12</div>
+          <div style="font-weight:800;font-size:13px;color:var(--cream);line-height:1.3;margin-bottom:8px">Led by the Spirit of God</div>
+          <div class="pbar"><div class="pbar-fill fp" style="width:0%"></div></div>
+          <div class="pbar"><div class="pbar-fill fp" id="book2-pbar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between"><span id="book2-pct">Not started</span><span>Weeks 8–12</span></div>
+        </div>
+      </div>
+
+      <!-- Week selector -->
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:10px">Select Week</div>
+      <div class="week-selector" id="week-selector">
+        <div class="wk-btn active" onclick="showWeek(1,this)">1</div>
+        <div class="wk-btn" onclick="showWeek(2,this)">2</div>
+        <div class="wk-btn" onclick="showWeek(3,this)">3</div>
+        <div class="wk-btn" onclick="showWeek(4,this)">4</div>
+        <div class="wk-btn" onclick="showWeek(5,this)">5</div>
+        <div class="wk-btn" onclick="showWeek(6,this)">6</div>
+        <div class="wk-btn wk-divider" onclick="showWeek(7,this)">7</div>
+        <div class="wk-btn wk-b2" onclick="showWeek(8,this)">8</div>
+        <div class="wk-btn wk-b2" onclick="showWeek(9,this)">9</div>
+        <div class="wk-btn wk-b2" onclick="showWeek(10,this)">10</div>
+        <div class="wk-btn wk-b2" onclick="showWeek(11,this)">11</div>
+        <div class="wk-btn wk-b2" onclick="showWeek(12,this)">12</div>
+      </div>
+
+      <!-- Week cards (shown one at a time) -->
+      <div id="week-display"></div>
+
+      <!-- AI Reflection button -->
+      <div style="margin-top:14px">
+        <button class="btn btn-outline" style="width:100%;font-size:13px" onclick="genReading()">✦ Get AI Reflection for This Week</button>
+        <div id="reading-loading" style="display:none;text-align:center;padding:16px;color:var(--muted);font-size:13px;font-style:italic">Generating reflection…</div>
+        <div id="reading-ai-extra" style="display:none;margin-top:12px"></div>
+      </div>
+    </div>
+
+        <!-- ── QUIZ ── -->
+    <div class="page" id="p-quiz">
+      <div class="ph"><h2>Module Quiz</h2><p>AI-generated questions tailored to each module.</p></div>
+      <div class="two-col">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Select Module</div>
+            <select id="quiz-mod" class="form-sel" style="margin-bottom:12px">
+              <option value="1">Module 1: Understanding Your Spirituality</option>
+              <option value="2" selected>Module 2: Kingdom Agenda</option>
+              <option value="3">Module 3: Self Leadership &amp; Accountability</option>
+              <option value="4">Module 4: Technical Training &amp; Orientation</option>
+              <option value="5">Module 5: Etiquette</option>
+              <option value="6">Module 6: Wisdom</option>
+            </select>
+            <button class="btn btn-yellow" style="width:100%" onclick="genQuiz()">Generate Quiz ✦</button>
+          </div>
+          <div class="card card-0">
+            <div class="card-title">Quiz History</div>
+            <div style="font-size:13px" id="quiz-history">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+                <span style="color:var(--cream)">Module 1</span>
+                <span style="font-weight:700;color:var(--success)">8/10 — 80%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0">
+                <span style="color:var(--muted)">Module 2</span>
+                <span style="color:var(--muted)">Not taken yet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" id="quiz-area">
+          <div style="text-align:center;padding:40px 0;color:var(--muted)">
+            <div style="font-size:40px;margin-bottom:12px">◇</div>
+            <div style="font-size:14px">Select a module and tap Generate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRAYER ── -->
+    <div class="page" id="p-prayer">
+      <div class="ph"><h2>Prayer &amp; Fellowship Log</h2><p>Track your daily 30-minute and weekly 1-hour fellowship targets.</p></div>
+      <div class="three-col" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="sc-label">This Week</div>
+          <div class="sc-val">4<span>/7</span></div>
+          <div class="sc-sub">Daily sessions logged</div>
+          <div class="pbar"><div class="pbar-fill fy" style="width:57%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Prayer Times</div>
+          <div class="sc-val">58<span>%</span></div>
+          <div class="sc-sub">Morning + night · Target 70%</div>
+          <div class="pbar"><div class="pbar-fill fw" style="width:58%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Extended Fellowship</div>
+          <div class="sc-val">2<span>/4</span></div>
+          <div class="sc-sub">1-hour sessions this month</div>
+          <div class="pbar"><div class="pbar-fill fp" style="width:50%"></div></div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">This Week</div>
+          <div class="prayer-grid">
+            <div class="pg-lbl">M</div><div class="pg-lbl">T</div><div class="pg-lbl">W</div>
+            <div class="pg-lbl">T</div><div class="pg-lbl">F</div><div class="pg-lbl">S</div><div class="pg-lbl">S</div>
+            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
+            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
+            <div class="pg-dot" onclick="togglePrayer(this)"></div>
+            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
+            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
+            <div class="pg-dot" onclick="togglePrayer(this)"></div>
+            <div class="pg-dot rest">Rest</div>
+          </div>
+          <button class="btn btn-yellow" style="margin-top:18px;width:100%" onclick="logTodayPrayer()">Log Today's Session</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Prayer Companion ✦</div>
+          <div class="chips">
+            <div class="chip" onclick="askPrayer('Give me a practical morning prayer schedule I can follow this week.')">Morning schedule</div>
+            <div class="chip" onclick="askPrayer('Give me a devotional prompt based on Kingdom Agenda for today.')">Today\'s devotional</div>
+            <div class="chip" onclick="askPrayer('How can I stay consistent in prayer when I feel spiritually dry or tired?')">Stay consistent</div>
+            <div class="chip" onclick="askPrayer('What scriptures can anchor my personal fellowship time as a church worker?')">Scripture anchors</div>
+          </div>
+          <div class="chat-box" id="prayer-chat" style="min-height:140px;max-height:220px">
+            <div class="bubble ai"><span class="ai-tag">AI Guide</span>Consistency in prayer is one of the most powerful habits you will build during training. You are at 58% for prayer times this month — ask me for a schedule, a devotional prompt, or some encouragement.</div>
+          </div>
+          <div class="chat-row">
+            <input class="chat-inp" id="prayer-inp" placeholder="Ask for prayer tips or devotionals…" onkeydown="if(event.key==='Enter')askPrayer()">
+            <button class="btn btn-yellow" onclick="askPrayer()">Ask</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+</div><!-- end app-shell -->
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bnav">
+  <div class="bnav-inner">
+    <button class="bnav-btn active" id="bn-0" onclick="nav('home',0,null)"><span class="bi">⬡</span><span class="bl">Home</span></button>
+    <button class="bnav-btn" id="bn-1" onclick="nav('curriculum',1,null)"><span class="bi">❋</span><span class="bl">Modules</span></button>
+    <button class="bnav-btn" id="bn-2" onclick="nav('tutor',2,null)"><span class="bi">✦</span><span class="bl">Tutor</span></button>
+    <button class="bnav-btn" id="bn-3" onclick="nav('quiz',3,null)"><span class="bi">◇</span><span class="bl">Quiz</span></button>
+    <button class="bnav-btn" id="bn-4" onclick="nav('prayer',4,null)"><span class="bi">◉</span><span class="bl">Prayer</span></button>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+// ── NAVIGATION ──
+const pageTitles = {
+  home:'My Dashboard', requirements:'Requirements', curriculum:'Curriculum',
+  tutor:'AI Tutor', reading:'Reading Plan', quiz:'Quiz', prayer:'Prayer Log'
+};
+
+function nav(page, bnIdx, sidebarEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('p-' + page).classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[page] || '';
+  // bottom nav sync
+  document.querySelectorAll('.bnav-btn').forEach((b,i) => { b.classList.toggle('active', i === bnIdx); });
+  // sidebar sync
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  if (sidebarEl) {
+    sidebarEl.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + page + "'")) {
+        btn.classList.add('active');
+      }
+    });
+  }
+  closeSidebar();
+  window.scrollTo(0, 0);
+}
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ── GOOGLE SHEETS CONFIG ──
+const DB_URL = 'https://script.google.com/macros/s/AKfycbwUUcGU7VmHzsYbw7SLzpgcH6eMbNTA-ekrT7ntL-9RTeWHEpmZAExD9_gNiH-YJIGixg/exec';
+let _trainee = JSON.parse(localStorage.getItem('tny_trainee') || 'null');
+
+async function dbGet(params) {
+  const url = DB_URL + '?' + new URLSearchParams(params);
+  const res = await fetch(url, { redirect: 'follow' });
+  const text = await res.text();
+  return JSON.parse(text);
+}
+async function dbPost(data) {
+  const res = await fetch(DB_URL, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  });
+  const text = await res.text();
+  return JSON.parse(text);
+}
+
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-shell').style.display = 'none';
+}
+function hideLogin() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'block';
+}
+
+async function loginTrainee() {
+  const name = document.getElementById('login-name').value.trim();
+  if (!name || name.length < 3) { showLoginError('Please enter your full name.'); return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Finding your profile…';
+  try {
+    const result = await dbPost({ action:'registerTrainee', fullName:name, cohort:'Cohort 1' });
+    if (result.error) throw new Error(result.error);
+    _trainee = { id: result.traineeId, name };
+    localStorage.setItem('tny_trainee', JSON.stringify(_trainee));
+    await loadDashboard();
+    hideLogin();
+  } catch(e) {
+    _trainee = { id: 'OFFLINE-' + Date.now(), name, offline: true };
+    localStorage.setItem('tny_trainee', JSON.stringify(_trainee));
+    hideLogin();
+    showToast('Working offline — progress will sync when reconnected');
+  }
+  btn.disabled = false; btn.textContent = 'Enter Portal ✦';
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+function logout() {
+  localStorage.removeItem('tny_trainee');
+  _trainee = null;
+  location.reload();
+}
+
+async function loadDashboard() {
+  if (!_trainee || _trainee.offline || DB_URL.includes('PASTE_YOUR')) return;
+  try {
+    const data = await dbGet({ action:'getDashboard', traineeId:_trainee.id });
+    if (data.error) return;
+    const s = data.scores;
+    setStatLive('stat-overall',      s.overall,      'fb');
+    setStatLive('stat-services',     s.services,     s.services >= 70 ? 'fg' : 'fw');
+    setStatLive('stat-prayer',       s.prayer,       s.prayer >= 70 ? 'fg' : 'fw');
+    setStatLive('stat-punctuality',  s.punctuality,  s.punctuality >= 80 ? 'fg' : 'fw');
+    if (data.requirements?.length) renderLiveReqs(data.requirements);
+    if (data.reading) {
+      setBookPct('book1', data.reading.book1Pct);
+      setBookPct('book2', data.reading.book2Pct);
+      if (data.reading.completedDays) data.reading.completedDays.forEach(k => { _done[k] = true; });
+    }
+    if (data.quizzes?.length) renderQuizHistory(data.quizzes);
+  } catch(e) {}
+}
+
+function setStatLive(id, val, cls) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const v = el.querySelector('.sc-val'); if (v) v.innerHTML = val + '<span>%</span>';
+  const b = el.querySelector('.pbar-fill'); if (b) { b.className = 'pbar-fill '+cls; b.style.width = val+'%'; }
+}
+
+function setBookPct(book, pct) {
+  const bar = document.getElementById(book+'-pbar'); if (bar) bar.style.width = pct+'%';
+  const lbl = document.getElementById(book+'-pct'); if (lbl) lbl.textContent = pct+'% complete';
+}
+
+function renderLiveReqs(reqs) {
+  document.querySelectorAll('.req-list-live').forEach(container => {
+    container.innerHTML = reqs.map(r => {
+      const cls = r.Status==='done'?'done':r.Status==='partial'?'partial':'pending';
+      const icon = r.Status==='done'?'✓':r.Status==='partial'?'~':'';
+      const sub = r.Evidence || (r.Status==='done'?'Completed':r.Status==='partial'?'In Progress':'Not yet completed');
+      return `<div class="req-item"><div class="req-dot ${cls}">${icon}</div><div class="req-text"><strong>${r.Requirement}</strong><small>${sub}</small></div></div>`;
+    }).join('');
+  });
+}
+
+function renderQuizHistory(quizzes) {
+  const el = document.getElementById('quiz-history');
+  if (!el) return;
+  el.innerHTML = quizzes.map(q =>
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span>${q.Module}</span>
+      <span style="font-weight:700;color:${q.Percent>=70?'var(--success)':'var(--warn)'}">${q.Score}/${q.Total} — ${q.Percent}%</span>
+    </div>`
+  ).join('');
+}
+
+async function syncPrayer() {
+  if (!_trainee || _trainee.offline || DB_URL.includes('PASTE_YOUR')) return;
+  try { await dbPost({ action:'logPrayer', traineeId:_trainee.id, traineeName:_trainee.name, date:new Date().toISOString().split('T')[0], sessionType:'Personal Fellowship', duration:30 }); } catch(e) {}
+}
+
+async function syncReading(weekNum, dayIdx, book, completed) {
+  if (!_trainee || _trainee.offline || DB_URL.includes('PASTE_YOUR')) return;
+  try { await dbPost({ action:'logReading', traineeId:_trainee.id, traineeName:_trainee.name, book, weekNumber:weekNum, dayKey:`w${weekNum}d${dayIdx}`, completed }); } catch(e) {}
+}
+
+async function syncQuiz(moduleName, score, total) {
+  if (!_trainee || _trainee.offline || DB_URL.includes('PASTE_YOUR')) return;
+  try { await dbPost({ action:'saveQuizScore', traineeId:_trainee.id, traineeName:_trainee.name, module:moduleName, score, total }); } catch(e) {}
+}
+
+// ── AI ──
+const SYS = `You are a warm, biblically grounded spiritual training companion for a 3-month church worker training programme at The New Yaba (TNY), a Lagos-based church.
+
+CURRICULUM (6 modules):
+1. Understanding Your Spirituality — man is a spirit (Gen 1:26, John 4:24, 1 Thess 5:23), speaking in tongues builds the inner man (1 Cor 14:4, Jude 20), the 9 gifts of the Spirit (1 Cor 12:7–11), the 9 fruits of the Spirit (Gal 5:22–23), gifts are given but fruit is grown
+2. Kingdom Agenda — Christ's love compels us not duty (2 Cor 5:14), we were dead in sin and saved for purpose (Eph 2:1–10), three loves: loving God (Deut 6:5), loving the world unto salvation (John 3:16), loving yourself (Matt 22:39), commitment is consistency not enthusiasm (Luke 9:62)
+3. Self Leadership & Accountability — self-governance precedes leading others (Prov 16:32), Paul kept his body under subjection (1 Cor 9:27), renewing the mind (Rom 12:2), accountability as gift not surveillance (Prov 27:17, James 5:16)
+4. Technical Training & Orientation — Bezalel filled with Spirit for craftsmanship (Ex 31:3), excellence as worship (Col 3:23–24), submission to leadership (Heb 13:17), conflict resolution (Matt 18:15), we are the Body of Christ exercising His authority
+5. Etiquette — above reproach (1 Tim 3:2), good conduct before the world (1 Pet 2:12), speech that builds up (Eph 4:29, Prov 18:21), tender conscience, digital presence as testimony
+6. Wisdom — fear of Lord is beginning (Prov 9:10), knowledge vs understanding vs wisdom, Hagin's 4 ways to train the spirit, the inward witness as primary guidance, continuous learning posture (Ecc 10:10)
+
+REQUIRED TEXTS — know these deeply:
+
+THE BELIEVER'S AUTHORITY (Kenneth E. Hagin) — 8 chapters:
+- Ch.1 The Prayers of Paul: Hagin prayed Eph 1:16–20 & 3:14–19 for himself 1,000+ times and advanced more spiritually in 6 months than in 16 prior years. We have "every spiritual blessing in heavenly places in Christ" (Eph 1:3) but must know and act on it.
+- Ch.2 What Is Authority: Distinction between dunamis (power/ability) and exousia (authority/right). We have legal authority in Christ — it belongs to all believers, not just special people.
+- Ch.3 Seated With Christ: Eph 2:5–6 — we were raised together and made to sit together in heavenly places. Hagin: "We've preached a cross religion; we need a throne religion." The Church is the Body of Christ — the Head cannot exercise authority except through the Body.
+- Ch.4 Breaking the Power of the Devil: Adam committed high treason, Satan became god of this world. Christ defeated him (Col 2:15). We have been translated from the kingdom of darkness into the kingdom of His Son (Col 1:13). "Conditions exist because we permit them to."
+- Ch.5 Exercising Authority: Matt 28:18 — all authority given to Christ, immediately delegated to the Church. Jesus told Hagin in a vision: "Not one single time in the NT is the Church told to pray that God would do anything against the devil — the Church is to exercise its own authority." James 4:7: resist the devil and he will flee — "flee" means run in terror.
+- Ch.6 Risen With Christ: We are new creatures — old nature gone. We reign as kings in life NOW (Rom 5:17), not only in eternity.
+- Ch.7 The Armour of God: Eph 6:10–18 — each piece unpacked. The armour is both defensive and offensive.
+- Ch.8 Authority Over Demon Spirits, Not Human Wills: Critical distinction. We can break the power of the devil over those in our sphere (family, immediate household) but we do not have authority to override anyone's free will.
+
+HOW TO BE LED BY THE SPIRIT OF GOD (Kenneth E. Hagin) — 29 chapters:
+- Core thesis: God leads us through our spirits. Prov 20:27 — "the spirit of man is the candle of the Lord."
+- Man is a spirit, has a soul (mind/will/emotions), and lives in a body. The spirit is born again; the soul is renewed; the body is presented.
+- THREE WAYS GOD LEADS — in order of frequency:
+  (1) The Inward Witness — primary way God leads ALL His children. A green light = velvety, peaceful feeling in the spirit. A red light = check or unease. Hagin tore up a letter 3 times before realising he had a check in his spirit. "The inward witness is just as supernatural as a vision, just not as spectacular."
+  (2) The Inward Voice — the still small voice, which is the voice of your own spirit. Not as authoritative as the Spirit of God. Conscience is the voice of the spirit. Keep a tender conscience — if seared, spiritual things become indistinct.
+  (3) The Voice of the Holy Spirit — more authoritative, almost audible. Rarer. God uses this for particularly significant or difficult situations requiring extra clarity.
+- Feelings are the voice of the body — do not lead by them. Smith Wigglesworth: "I am not moved by what I feel. I am moved only by what I believe."
+- Do NOT seek visions or fleeces — the NT doesn't instruct this. If God gives one, receive it, but don't pursue the spectacular and miss the supernatural that is present all the time.
+- Prophecy must confirm what you already have in your spirit — do not build your life on personal prophecies.
+- 4 RULES TO TRAIN THE HUMAN SPIRIT: (1) Meditate the Word daily, (2) Practise/do the Word, (3) Give the Word first place in every decision, (4) Instantly obey the voice of your spirit.
+- Praying in tongues daily keeps your spirit in contact with the Father of spirits, quiets the natural mind, and makes you more spirit-conscious.
+
+REQUIREMENTS: saved · filled with Holy Ghost (tongues) · preach gospel + bring convert · invite un-churched person · complete both reading texts · 70% prayer attendance (morning & night daily except Sundays) · 70% service attendance (Sunday, Tuesday, Friday Immerse) · 80% punctuality · 30 min daily + 1 hr weekly personal fellowship.
+
+Be warm, pastorally wise, practically clear, and biblically rich. Draw from Hagin's specific stories and phrases where relevant. Speak like a wise elder who genuinely cares. Under 200 words unless depth truly requires more.`;
+
+async function callAI(msgs, sysOverride) {
+  const res = await fetch(DB_URL, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      action: 'callAI',
+      messages: msgs,
+      system: sysOverride || SYS
+    })
+  });
+  const text = await res.text();
+  const d = JSON.parse(text);
+  if (!d.ok) throw new Error(d.error || 'AI error');
+  return d.text;
+}
+
+function addBubble(chatId, role, text) {
+  const c = document.getElementById(chatId);
+  const b = document.createElement('div');
+  b.className = 'bubble ' + role;
+  b.innerHTML = role === 'ai' ? `<span class="ai-tag">AI Guide</span>${text}` : text;
+  c.appendChild(b);
+  c.scrollTop = c.scrollHeight;
+}
+function addTyping(chatId) {
+  const c = document.getElementById(chatId);
+  const t = document.createElement('div');
+  t.className = 'typing-ind'; t.id = 'typ-' + chatId;
+  t.innerHTML = '<span></span><span></span><span></span>';
+  c.appendChild(t); c.scrollTop = c.scrollHeight;
+}
+function rmTyping(chatId) { const el = document.getElementById('typ-' + chatId); if (el) el.remove(); }
+
+let tutorH = [], reqH = [], prayerH = [];
+
+async function askTutor(pre) {
+  const inp = document.getElementById('tutor-inp');
+  const btn = document.getElementById('tutor-btn');
+  const q = pre || inp.value.trim(); if (!q) return;
+  inp.value = '';
+  addBubble('tutor-chat', 'user', q); addTyping('tutor-chat'); btn.disabled = true;
+  tutorH.push({ role: 'user', content: q });
+  try {
+    const r = await callAI(tutorH);
+    tutorH.push({ role: 'assistant', content: r });
+    rmTyping('tutor-chat'); addBubble('tutor-chat', 'ai', r);
+  } catch(e) { rmTyping('tutor-chat'); addBubble('tutor-chat', 'ai', 'Connection error — please try again.'); }
+  btn.disabled = false;
+}
+
+async function askReq(pre) {
+  const inp = document.getElementById('req-inp');
+  const q = pre || inp.value.trim(); if (!q) return;
+  inp.value = '';
+  addBubble('req-chat', 'user', q); addTyping('req-chat');
+  reqH.push({ role: 'user', content: q });
+  try {
+    const r = await callAI(reqH, SYS + '\n\nFocus specifically on helping the trainee understand and complete their onboarding requirements. Be direct and practical.');
+    reqH.push({ role: 'assistant', content: r });
+    rmTyping('req-chat'); addBubble('req-chat', 'ai', r);
+  } catch(e) { rmTyping('req-chat'); addBubble('req-chat', 'ai', 'Connection error — please try again.'); }
+}
+
+async function askPrayer(pre) {
+  const inp = document.getElementById('prayer-inp');
+  const q = pre || inp.value.trim(); if (!q) return;
+  inp.value = '';
+  addBubble('prayer-chat', 'user', q); addTyping('prayer-chat');
+  prayerH.push({ role: 'user', content: q });
+  try {
+    const r = await callAI(prayerH, SYS + '\n\nFocus on prayer, devotional life and spiritual discipline. Offer practical schedules and scriptural encouragement.');
+    prayerH.push({ role: 'assistant', content: r });
+    rmTyping('prayer-chat'); addBubble('prayer-chat', 'ai', r);
+  } catch(e) { rmTyping('prayer-chat'); addBubble('prayer-chat', 'ai', 'Connection error — please try again.'); }
+}
+
+// ── READING PLAN — AI Reflections ──
+async function genReading() {
+  document.getElementById('reading-loading').style.display = 'block';
+  const extra = document.getElementById('reading-ai-extra');
+  if (extra) extra.style.display = 'none';
+  try {
+    const prompt = `Based on the two Hagin books (The Believer's Authority and How to be Led by the Spirit of God), generate 5 personalised deep-dive reflection prompts that a church worker trainee can journal on this week. Each should connect a specific Hagin teaching to practical church service at TNY. Return ONLY valid JSON, no markdown:
+{"reflections":[{"title":"Short title","prompt":"Full reflection question connecting Hagin teaching to TNY service life","hagin_ref":"The specific Hagin quote or concept this draws from"}]}`;
+    const raw = await callAI([{ role: 'user', content: prompt }], 'Return only valid JSON. No markdown, no preamble.');
+    const data = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    document.getElementById('reading-loading').style.display = 'none';
+    if (extra) {
+      let html = '<div class="week-hd" style="margin-top:16px">✦ AI Reflection Prompts for This Week</div>';
+      data.reflections.forEach((r, i) => {
+        html += `<div style="margin-bottom:12px;padding:12px 14px;background:var(--yellow-lt);border:1px solid var(--yellow-border);border-radius:10px">
+          <div style="font-size:12px;font-weight:700;color:var(--yellow);margin-bottom:4px">${i+1}. ${r.title}</div>
+          <div style="font-size:13px;color:var(--cream);line-height:1.6;margin-bottom:6px">${r.prompt}</div>
+          <div style="font-size:11px;color:var(--muted);font-style:italic">📖 ${r.hagin_ref}</div>
+        </div>`;
+      });
+      extra.innerHTML = html;
+      extra.style.display = 'block';
+    }
+  } catch(e) {
+    document.getElementById('reading-loading').style.display = 'none';
+    showToast('Could not generate reflections — try again');
+  }
+}
+
+// ── QUIZ ──
+const modNames = {
+  1: 'Understanding Your Spirituality — man is a spirit (Gen 1:26, John 4:24), the new birth regenerates the spirit (2 Cor 5:17), speaking in tongues builds the inner man (1 Cor 14:4, Jude 20), 9 gifts of the Spirit (1 Cor 12:7–11), 9 fruits of the Spirit (Gal 5:22–23). From Hagin\'s Believer\'s Authority: we are seated with Christ in heavenly places; authority belongs to all believers not just the few.',
+  2: 'Kingdom Agenda — Christ\'s love compels us not duty or guilt (2 Cor 5:14), we were dead in sin and saved for good works (Eph 2:1–10), three loves: God/world/self (Matt 22:37–39), commitment is consistency not just initial enthusiasm (Luke 9:62). Hagin: we serve as the Body of Christ exercising His delegated authority.',
+  3: 'Self Leadership and Accountability — self-governance precedes leading others (Prov 16:32), Paul kept his body under subjection (1 Cor 9:27), renewing the mind (Rom 12:2), accountability as a gift (Prov 27:17). From Hagin\'s Led by the Spirit: the soul must be renewed through the Word; the inward man must dominate the outward man.',
+  4: 'Technical Training and Orientation — Bezalel filled with Spirit for craftsmanship (Ex 31:3), excellence as worship (Col 3:23–24), submission to leadership (Heb 13:17), conflict resolution God\'s way (Matt 18:15). Hagin: we are the Body of Christ — Christ exercises His authority on earth through the Church, not independently.',
+  5: 'Etiquette — above reproach standard (1 Tim 3:2), good conduct before the world (1 Pet 2:12), speech with power of life and death (Prov 18:21, Eph 4:29). From Hagin\'s Led by the Spirit: keeping a tender conscience; Hagin warns that a seared conscience makes spiritual things indistinct.',
+  6: 'Wisdom — fear of Lord is foundation (Prov 9:10), knowledge vs understanding vs wisdom. From Hagin\'s Led by the Spirit Ch.28: 4 rules to train the human spirit — meditate the Word, practise the Word, give it first place, instantly obey your spirit. The inward witness is the primary way God leads — it is supernatural even when not spectacular (Prov 20:27).'
+};
+
+async function genQuiz() {
+  const mod = document.getElementById('quiz-mod').value;
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = `<div style="text-align:center;padding:36px 0;color:var(--muted);font-size:13px">
+    <div style="display:inline-flex;gap:5px;margin-bottom:12px">
+      <span style="width:7px;height:7px;background:var(--yellow);border-radius:50%;display:inline-block;animation:tbounce 1.2s infinite;opacity:.5"></span>
+      <span style="width:7px;height:7px;background:var(--yellow);border-radius:50%;display:inline-block;animation:tbounce 1.2s .18s infinite;opacity:.5"></span>
+      <span style="width:7px;height:7px;background:var(--yellow);border-radius:50%;display:inline-block;animation:tbounce 1.2s .36s infinite;opacity:.5"></span>
+    </div><br>Generating quiz for Module ${mod}…</div>`;
+  try {
+    const prompt = `Generate a 5-question multiple-choice quiz for this church worker training module: "${modNames[mod]}". Return ONLY valid JSON, no markdown:
+{"title":"Module ${mod} Quiz","questions":[{"q":"Question?","options":["A. option","B. option","C. option","D. option"],"answer":0}]}
+The answer field is the 0-indexed correct option. Questions should be theologically meaningful and practically challenging.`;
+    const raw = await callAI([{ role: 'user', content: prompt }], 'Return only valid JSON. No markdown, no preamble.');
+    const quiz = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    renderQuiz(quiz);
+  } catch(e) {
+    area.innerHTML = '<div style="padding:20px;text-align:center;color:var(--warn);font-size:13px">Could not generate quiz — please try again.</div>';
+  }
+}
+
+function renderQuiz(quiz) {
+  const area = document.getElementById('quiz-area');
+  window._qz = { ...quiz, score: 0, answered: 0 };
+  let html = `<div style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;color:var(--cream);margin-bottom:18px;letter-spacing:-0.3px">${quiz.title}</div>`;
+  quiz.questions.forEach((q, qi) => {
+    html += `<div style="margin-bottom:18px">
+      <div style="font-size:13.5px;font-weight:600;color:var(--cream);margin-bottom:10px;line-height:1.45">${qi+1}. ${q.q}</div>`;
+    q.options.forEach((o, oi) => {
+      html += `<div class="quiz-opt" id="q${qi}o${oi}" onclick="pickAns(${qi},${oi},${q.answer},${quiz.questions.length})">${o}</div>`;
+    });
+    html += `<div id="q${qi}-fb" style="font-size:12px;margin-top:5px;display:none"></div></div>`;
+  });
+  html += `<div id="quiz-result" style="display:none;text-align:center;padding:18px 0;border-top:1px solid var(--yellow-border)"></div>`;
+  area.innerHTML = html;
+}
+
+function pickAns(qi, oi, correct, total) {
+  for (let i = 0; i < 4; i++) { const el = document.getElementById(`q${qi}o${i}`); if (el) el.style.pointerEvents = 'none'; }
+  const sel = document.getElementById(`q${qi}o${oi}`);
+  const corEl = document.getElementById(`q${qi}o${correct}`);
+  const fb = document.getElementById(`q${qi}-fb`);
+  if (oi === correct) { sel.classList.add('correct'); fb.style.display = 'block'; fb.style.color = 'var(--success)'; fb.textContent = '✓ Correct!'; window._qz.score++; }
+  else { sel.classList.add('wrong'); if (corEl) corEl.classList.add('correct'); fb.style.display = 'block'; fb.style.color = '#D94040'; fb.textContent = 'Not quite — the correct answer is highlighted.'; }
+  window._qz.answered++;
+  if (window._qz.answered === total) {
+    const pct = Math.round(window._qz.score / total * 100);
+    const el = document.getElementById('quiz-result'); el.style.display = 'block';
+    const emoji = pct >= 80 ? '🌟' : pct >= 60 ? '💪' : '📖';
+    el.innerHTML = `<div style="font-family:'Manrope',sans-serif;font-size:22px;font-weight:800;color:var(--cream);margin-bottom:4px">${emoji} ${window._qz.score}/${total} — ${pct}%</div>
+      <div style="font-size:13px;color:var(--muted)">${pct >= 70 ? 'Great work! Keep studying.' : 'Review the module before your next class.'}</div>`;
+    // Sync to Sheet
+    syncQuiz('Module ' + document.getElementById('quiz-mod').value, window._qz.score, total);
+  }
+}
+
+// ── MODULE → TUTOR ──
+function openMod(n) {
+  const prompts = {
+    1: 'Walk me through Module 1: Understanding Your Spirituality. Connect it to what Hagin teaches in The Believer\'s Authority about being seated with Christ and in How to be Led about man being a spirit — and what this means practically for me as a church worker.',
+    2: 'Explain Module 2: Kingdom Agenda to me — why do we serve, what are we saved from, and how do the three loves (God, world, self) work together? Draw from both the curriculum and the Hagin material.',
+    3: 'What does Module 3 — Self Leadership and Accountability — teach? Include Hagin\'s insight that the inward man must dominate the outward man, and Paul\'s principle of keeping his body under subjection.',
+    4: 'Explain Module 4: Technical Training and Orientation. Connect Hagin\'s teaching that Christ delegated His authority on earth to the Church — and what that means for how I show up in my service role.',
+    5: 'Walk me through Module 5: Etiquette. Include Hagin\'s emphasis on keeping a tender conscience — because it\'s the voice of the spirit — and how this connects to how I carry myself as a TNY worker.',
+    6: 'Tell me about Module 6: Wisdom. Go through Hagin\'s 4 rules for training the human spirit from Chapter 28 of "How to be Led", and connect them to how I can grow as a long-term church worker.'
+  };
+  nav('tutor', 2, null);
+  setTimeout(() => askTutor(prompts[n]), 200);
+}
+
+// ── UTILITY ──
+function toggleDone(el) {
+  if (el.textContent === '○') { el.textContent = '✓'; el.style.color = 'var(--success)'; }
+  else { el.textContent = '○'; el.style.color = ''; }
+}
+function logTodayPrayer() {
+  showToast('Today\'s session logged ✓');
+  syncPrayer();
+}
+
+function togglePrayer(el) {
+  el.classList.toggle('logged');
+  el.textContent = el.classList.contains('logged') ? '✓' : '';
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ── REQUIREMENT TICKING ──
+const REQ_CONFIG = {
+  hg:         { label:'Filled with Holy Ghost — evidence of tongues',        req:'Filled with Holy Ghost (tongues)',              title:'Notify Trainer — Holy Ghost', sub:'Let your trainer know you\'ve received the Holy Ghost with evidence of tongues. They will confirm this with the pastor.' },
+  gospel:     { label:'Preach gospel + bring convert to church',              req:'Preach gospel + bring convert to church',        title:'Log Gospel Conversation',     sub:'Tell us about the person you spoke to. Once you bring them to church, your trainer will mark this as complete.' },
+  invite:     { label:'Invite an un-churched person to church',               req:'Invite un-churched person to church',            title:'Log an Invitation',           sub:'Who did you invite? When did you invite them? Note the details here.' },
+  fellowship: { label:'30 min daily + 1 hr weekly personal fellowship',       req:'80% punctuality',                               title:'Log Fellowship Session',      sub:'Log a personal prayer and fellowship session (30 minutes or more).' }
+};
+
+let _currentReqKey = null;
+
+function tickReq(key) {
+  _currentReqKey = key;
+  const cfg = REQ_CONFIG[key];
+  document.getElementById('req-modal-title').textContent = cfg.title;
+  document.getElementById('req-modal-sub').textContent   = cfg.sub;
+  document.getElementById('req-modal-note').value        = '';
+  document.getElementById('req-modal').style.display     = 'flex';
+}
+
+function closeReqModal() {
+  document.getElementById('req-modal').style.display = 'none';
+  _currentReqKey = null;
+}
+
+async function saveReqLog() {
+  const key  = _currentReqKey;
+  const note = document.getElementById('req-modal-note').value.trim();
+  if (!note) { document.getElementById('req-modal-note').style.borderColor = 'var(--pink)'; return; }
+
+  closeReqModal();
+
+  const cfg = REQ_CONFIG[key];
+
+  // Update requirements page dot
+  const dot = document.getElementById('dot-' + key);
+  const sub = document.getElementById('sub-' + key);
+  if (dot) { dot.className = 'req-dot partial'; dot.textContent = '~'; }
+  if (sub) sub.textContent = key === 'hg' ? 'Notified — awaiting pastor confirmation' : 'Logged — awaiting trainer confirmation';
+
+  // Mirror to dashboard
+  const homeDot = document.getElementById('home-dot-' + key);
+  const homeSub = document.getElementById('home-sub-' + key);
+  if (homeDot) { homeDot.className = 'req-dot partial'; homeDot.textContent = '~'; }
+  if (homeSub) homeSub.textContent = key === 'hg' ? 'Notified — awaiting pastor confirmation' : 'Logged — awaiting trainer confirmation';
+
+  showToast('Logged ✓ Your trainer will review this');
+
+  // Sync to Sheet
+  if (_trainee && !_trainee.offline) {
+    try {
+      await dbPost({
+        action:      'updateRequirement',
+        traineeId:   _trainee.id,
+        traineeName: _trainee.name,
+        requirement: cfg.req,
+        status:      'partial',
+        evidence:    note,
+        updatedBy:   _trainee.name
+      });
+    } catch(e) {}
+  }
+}
+
+// Close modal when tapping backdrop
+document.addEventListener('click', e => {
+  const modal = document.getElementById('req-modal');
+  if (e.target === modal) closeReqModal();
+});
+function toggleMod(n) {
+  const body = document.getElementById('body-' + n);
+  const arr  = document.getElementById('arr-' + n);
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  arr.classList.toggle('open', !open);
+}
+
+// ── WEEK DATA ──
+const WEEKS = [
+  {n:1,book:1,title:"The Prayers of Paul",sub:"Eph 1:16–20 & 3:14–19 · Authority belongs to all believers",days:[
+    {d:'Mon',cls:'mon',task:'Read Chapter 1 fully',note:"Hagin prayed these prayers 1,000+ times — what changed? Note 2 things that stand out."},
+    {d:'Wed',cls:'wed',task:'Pray the Ephesians prayers for yourself',note:"Personalise Eph 1:17–20 & 3:16–19 — insert your name. Pray aloud at least twice."},
+    {d:'Fri',cls:'fri',task:'Reflection',note:"What authority do you have as a believer that you haven't been using? Write one honest answer."}]},
+  {n:2,book:1,title:"What Is Authority? · Seated With Christ",sub:"Eph 2:5–6 · dunamis vs exousia · Throne not just cross",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 2 — What Is Authority?',note:"Hagin distinguishes power (dunamis) from authority (exousia). Why does this matter for how you serve?"},
+    {d:'Wed',cls:'wed',task:'Read Ch. 3 — Seated With Christ',note:"Hagin: \"We've preached a cross religion; we need a throne religion.\" What does being seated with Christ mean NOW?"},
+    {d:'Fri',cls:'fri',task:'Reflection + Module 1 Quiz',note:"How does knowing you are seated with Christ change how you show up in your service role at TNY?"}]},
+  {n:3,book:1,title:"Breaking the Power · Exercising Authority",sub:"Col 2:15 · Col 1:13 · James 4:7",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 4 — Breaking the Power of the Devil',note:"Adam's treason → Satan's legal hold → Christ's victory. Trace the story and locate yourself in it."},
+    {d:'Wed',cls:'wed',task:'Read Ch. 5 — Exercising Authority',note:"\"Conditions exist because we permit them to.\" Where have you been waiting for God when He's waiting for you?"},
+    {d:'Fri',cls:'fri',task:'Practise + Reflection',note:"Identify one area in your life or service where you will exercise your authority this week. Write it. Do it."}]},
+  {n:4,book:1,title:"Risen With Christ · The Armour of God",sub:"Rom 5:17 · Eph 6:10–18 · Reign as kings in life NOW",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 6 — Risen With Christ',note:"Old nature gone — you are a new creation. List 3 practical implications for how you serve at TNY."},
+    {d:'Wed',cls:'wed',task:'Read Ch. 7 — The Armour of God',note:"Hagin unpacks each piece. Which piece of armour do you most neglect daily? Why?"},
+    {d:'Fri',cls:'fri',task:'Module 2 Quiz + Reflection',note:"How does putting on the full armour daily relate to your specific role at TNY?"}]},
+  {n:5,book:1,title:"Authority Over Demon Spirits",sub:"James 4:7 · Authority over spirits, NOT human wills",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 8 fully',note:"Authority over spirits, NOT human wills — why does this boundary matter for church workers?"},
+    {d:'Wed',cls:'wed',task:'James 4:7 deep dive',note:"Hagin: 'flee' means 'run as if in terror.' The devil is terrified of a believer who knows their authority. Does he know you know?"},
+    {d:'Fri',cls:'fri',task:'Book 1 Consolidation',note:"Write 3 truths from Ch. 1–8 that most changed your thinking. Share one with your accountability partner."}]},
+  {n:6,book:1,title:"Book 1 Review + Begin Book 2",sub:"1 Thess 5:23 · Man is a spirit · Spirit-consciousness",days:[
+    {d:'Mon',cls:'mon',task:'Book 1 Assessment Prep',note:"Review highlights from The Believer's Authority — prepare for trainer quiz covering all 8 chapters."},
+    {d:'Wed',cls:'wed',task:'Begin How to be Led — Preface + Ch. 1–2',note:"Hagin: \"God will enlighten us through our spirits.\" What does being spirit-conscious look like daily?"},
+    {d:'Fri',cls:'fri',task:'Reflection',note:"Paul puts spirit first in 1 Thess 5:23. How would your week look if you led with your spirit instead of your circumstances?"}]},
+  {n:7,book:1,title:"Spirit vs Soul · Saving the Soul",sub:"Heb 4:12 · Rom 12:2 · Soul is renewed, not born again",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 3–4 — Spirit vs Soul',note:"Hagin: \"With my spirit I contact spiritual things; with my soul, intellectual things.\" Which dominates your decisions?"},
+    {d:'Wed',cls:'wed',task:'Read Ch. 5–6 — Saving the Soul · Presenting the Body',note:"The soul is renewed through the Word. What mental pattern needs the most renewal in your life right now?"},
+    {d:'Fri',cls:'fri',task:'Module 3 Quiz + Reflection',note:"Rom 12:1–2 — present your body AND renew your mind. What one habit needs to change most urgently?"}]},
+  {n:8,book:2,title:"The Inward Witness — Primary Way God Leads",sub:"Rom 8:14,16 · Prov 20:27 · Green light / Red light",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 7 — Number One: The Inward Witness',note:"Green light = velvety peace. Red light = check/unease. Recall a recent decision — was there a witness you ignored?"},
+    {d:'Wed',cls:'wed',task:'Read Ch. 8–10 — Fleeced! · Following the Witness',note:"Why is putting out a fleece unreliable under the New Covenant? What should you do instead?"},
+    {d:'Fri',cls:'fri',task:'Practise listening this week',note:"Before one decision today, pause and ask — what does my spirit say? Record the outcome. Share it next session."}]},
+  {n:9,book:2,title:"The Inward Voice · Conscience · God Inside",sub:"Acts 23:1 · 1 Jn 3:20–21 · Keep a tender conscience",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 11–13 — Inward Voice · Conscience',note:"Hagin: \"Conscience is the voice of your spirit.\" How has your conscience been speaking — and are you listening?"},
+    {d:'Wed',cls:'wed',task:'Read Ch. 14–16 — God Inside · Tender-Hearted',note:"What hardens the spiritual conscience? What softens it? Be specific about your own life."},
+    {d:'Fri',cls:'fri',task:'Module 4 Quiz + Reflection',note:"Where in your church service role do you most need a tender, spirit-led conscience right now?"}]},
+  {n:10,book:2,title:"Feelings vs Spirit · Voice of the Holy Spirit",sub:"Rom 8:16 · Feeling = body · Reason = soul · Conscience = spirit",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 17–18 — Feelings · Help From Within',note:"Feeling = body voice. Reason = soul voice. Conscience = spirit voice. Which one do you follow most consistently?"},
+    {d:'Wed',cls:'wed',task:'Read Ch. 19–22 — Voice of the Holy Spirit',note:"The Voice of the Holy Spirit is more authoritative. Always judge every leading by the Word first."},
+    {d:'Fri',cls:'fri',task:'Reflection',note:"When have you mistaken emotion for spiritual leading? What would Hagin's framework have you do differently?"}]},
+  {n:11,book:2,title:"Prophecy · Visions · Spectacular Guidance",sub:"Acts 13:2 · 1 Cor 14:29–32 · Don't seek the spectacular",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 23–25 — Prophecy · Spirit Bade Me Go',note:"If prophecy doesn't confirm what you already have in your spirit — don't accept it. Why is this principle important?"},
+    {d:'Wed',cls:'wed',task:'Read Ch. 26–27 — Visions · Listen to Your Heart',note:"Hagin: be content with the inward witness — it is just as supernatural, just not as spectacular."},
+    {d:'Fri',cls:'fri',task:'Module 5 Quiz + Reflection',note:"Where have you been seeking spectacle when God was offering you a quiet witness?"}]},
+  {n:12,book:2,title:"Training Your Spirit · Praying in Tongues",sub:"Josh 1:8 · Prov 20:27 · Hagin's 4 rules",days:[
+    {d:'Mon',cls:'mon',task:'Read Ch. 28 — How to Train the Human Spirit',note:"Hagin's 4 rules: Meditate · Practise · Give first place · Instantly obey. Rate yourself 1–10 on each right now."},
+    {d:'Wed',cls:'wed',task:'Read Ch. 29 — Praying With the Spirit',note:"Hagin: \"Pray in tongues every day — your spirit is in direct contact with the Father of spirits.\" Is this your practice?"},
+    {d:'Fri',cls:'fri',task:'Full Programme Consolidation + Module 6 Quiz',note:"Write your 5 most transformative takeaways from both books. Submit your reading reflection to your trainer."}]}
+];
+
+let _done = {};
+
+function showWeek(n, btn) {
+  document.querySelectorAll('.wk-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const w = WEEKS[n-1];
+  const b2 = w.book === 2;
+  const accentCol = b2 ? 'var(--pink)' : 'var(--yellow)';
+  const bookLbl = b2 ? '📗 Book 2' : '📘 Book 1';
+  let html = `<div class="week-card">
+    <div class="wc-num">${bookLbl} · <span style="color:${accentCol}">Week ${w.n} of 12</span></div>
+    <div class="wc-title">${w.title}</div>
+    <div class="wc-sub">${w.sub}</div>`;
+  w.days.forEach((d,i) => {
+    const key = `w${n}d${i}`;
+    const done = _done[key];
+    html += `<div class="wk-day">
+      <div class="wk-day-pill ${d.cls}">${d.d}</div>
+      <div class="wk-day-content"><strong>${d.task}</strong><span>${d.note}</span></div>
+      <div class="wk-done" onclick="toggleWkDay('${key}',this)" style="color:${done?'var(--success)':'var(--muted)'}">${done?'✓':'○'}</div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('week-display').innerHTML = html;
+  document.getElementById('reading-ai-extra').style.display = 'none';
+}
+
+function toggleWkDay(key, el) {
+  _done[key] = !_done[key];
+  el.textContent = _done[key] ? '✓' : '○';
+  el.style.color = _done[key] ? 'var(--success)' : 'var(--muted)';
+  // Parse key: w{week}d{day}
+  const match = key.match(/w(\d+)d(\d+)/);
+  if (match) {
+    const wk = parseInt(match[1]);
+    const di = parseInt(match[2]);
+    const book = wk <= 7 ? 'Book 1' : 'Book 2';
+    syncReading(wk, di, book, _done[key]);
+  }
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  // Week selector init
+  const firstBtn = document.querySelector('.wk-btn');
+  if (firstBtn) showWeek(1, firstBtn);
+
+  // Login check
+  if (_trainee) {
+    // Returning user — show app, load fresh data
+    hideLogin();
+    document.querySelectorAll('.trainee-name-display').forEach(el => el.textContent = _trainee.name);
+    document.querySelectorAll('.trainee-initials').forEach(el => {
+      const parts = _trainee.name.trim().split(' ');
+      el.textContent = (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
+    });
+    loadDashboard();
+  } else {
+    // New user — show login
+    showLogin();
+  }
+});
+</script>
+</body>
+</html>
