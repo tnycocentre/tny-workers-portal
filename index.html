@@ -119,6 +119,8 @@ html, body {
   margin-left: 240px;
   min-height: 100vh;
   display: flex; flex-direction: column;
+  overflow-y: auto;
+  height: 100vh;
 }
 
 .topbar {
@@ -128,6 +130,7 @@ html, body {
   background: var(--white);
   position: sticky; top:0; z-index:50;
   box-shadow: 0 1px 0 var(--border);
+  flex-shrink: 0;
 }
 .page-title {
   font-family: 'Manrope', sans-serif;
@@ -135,7 +138,7 @@ html, body {
   letter-spacing: -0.3px;
 }
 
-.content { flex:1; padding: 32px 36px; overflow-y: auto; }
+.content { flex:1; padding: 32px 36px; overflow-y: visible; }
 
 /* ===================== PAGES ===================== */
 .page { display: none; }
@@ -506,7 +509,7 @@ html, body {
   .sidebar-overlay.open { display: block; }
   .main { margin-left: 0; }
   .topbar { padding: 14px 18px; }
-  .content { padding: 18px 16px 90px; }
+  .content { padding: 18px 16px 90px; overflow-y: visible; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .two-col { grid-template-columns: 1fr; }
   .three-col { grid-template-columns: 1fr 1fr; }
