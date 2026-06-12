@@ -438,6 +438,44 @@ html, body {
 .journal-ta:focus { border-color:var(--yellow); }
 .journal-ta::placeholder { color:#BBBBBB; }
 
+/* ── CURRICULUM TWO-COLUMN ── */
+.cur-layout { display:grid; grid-template-columns:220px 1fr; gap:14px; align-items:start; }
+@media(max-width:640px) { .cur-layout { grid-template-columns:1fr; } }
+.cur-list { display:flex; flex-direction:column; gap:6px; }
+.cur-mod-btn {
+  display:flex; align-items:center; gap:10px; padding:12px 14px;
+  background:var(--white); border:1.5px solid var(--card-border);
+  border-radius:12px; cursor:pointer; transition:all 0.18s;
+  box-shadow:var(--shadow);
+}
+.cur-mod-btn:hover { border-color:var(--yellow); }
+.cur-mod-btn.active { border-color:var(--yellow); border-width:2px; background:var(--yellow-lt); }
+.cur-mod-num {
+  width:32px; height:32px; border-radius:8px; background:var(--cream);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:var(--white); flex-shrink:0;
+}
+.cur-mod-num.done { background:var(--success); font-size:12px; }
+.cur-mod-info { flex:1; min-width:0; }
+.cur-mod-info strong { font-size:12px; font-weight:700; color:var(--cream); display:block; }
+.cur-mod-info span { font-size:11px; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.cur-panel { background:var(--white); border:1.5px solid var(--card-border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; min-height:300px; }
+.cur-panel-hd { padding:18px 20px 0; }
+.cur-panel-title { font-size:16px; font-weight:800; color:var(--cream); margin-bottom:2px; }
+.cur-panel-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
+.cur-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 20px; overflow-x:auto; }
+.cur-tab {
+  padding:9px 14px; font-size:12px; font-weight:700; cursor:pointer;
+  color:var(--muted); border-bottom:2px solid transparent;
+  transition:all 0.18s; white-space:nowrap; font-family:\'Manrope\',sans-serif;
+  background:none; border-top:none; border-left:none; border-right:none;
+}
+.cur-tab:hover { color:var(--cream); }
+.cur-tab.active { color:var(--yellow-dk); border-bottom-color:var(--yellow); }
+.cur-tab-body { padding:18px 20px; display:none; }
+.cur-tab-body.active { display:block; }
+
 /* ── MODULE OUTLINES ── */
 .outline-section { margin:12px 0 4px; }
 .outline-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--blue); margin-bottom:8px; padding-bottom:5px; border-bottom:1px solid var(--border); }
@@ -828,7 +866,7 @@ html, body {
 
     <!-- ── CURRICULUM ── -->
     <div class="page" id="p-curriculum">
-      <div class="ph"><h2>Curriculum</h2><p>6 modules · 3 months · tap any module to explore.</p></div>
+      <div class="ph"><h2>Curriculum</h2><p>6 modules · 3 months · tap a module to read its outline.</p></div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
         <div onclick="nav('reading',-1,null)" style="cursor:pointer;background:rgba(28,63,212,0.12);border:1px solid rgba(28,63,212,0.25);border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px">
@@ -841,318 +879,45 @@ html, body {
         </div>
       </div>
 
-      <div id="mod-accordion">
+      <div class="cur-layout">
 
-        <div class="mod-acc-item" id="macc-1">
-          <div class="mod-acc-hd" onclick="toggleMod(1)">
-            <div class="mod-num done" style="flex-shrink:0">✓</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 1 — Understanding Your Spirituality</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 1 · Man is a Spirit · Tongues · Gifts &amp; Fruits</div>
-            </div>
-            <div class="mod-badge mb-done" style="flex-shrink:0">Done</div>
-            <div class="acc-arrow" id="arr-1">▸</div>
+        <!-- LEFT: Module list -->
+        <div class="cur-list">
+          <div class="cur-mod-btn active" id="cmb-1" onclick="openCurMod(1)">
+            <div class="cur-mod-num done">✓</div>
+            <div class="cur-mod-info"><strong>Module 1</strong><span>Understanding Your Spirituality</span></div>
+            <div class="mod-badge mb-done">Done</div>
           </div>
-          <div class="mod-acc-body" id="body-1" style="display:none">
-            <div class="theme-grid">
-              <div class="theme-card"><div class="tc-icon">🔥</div><div class="tc-label">You are a spirit</div><div class="tc-ref">Gen 1:26 · John 4:24</div></div>
-              <div class="theme-card"><div class="tc-icon">🗣️</div><div class="tc-label">Tongues builds inner man</div><div class="tc-ref">1 Cor 14:4 · Jude 20</div></div>
-              <div class="theme-card"><div class="tc-icon">🎁</div><div class="tc-label">9 Gifts — tools for service</div><div class="tc-ref">1 Cor 12:7–11</div></div>
-              <div class="theme-card"><div class="tc-icon">🌱</div><div class="tc-label">9 Fruits — grown, not given</div><div class="tc-ref">Gal 5:22–23</div></div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">A — Man is a Spirit</div>
-              <div class="outline-point">You are not a body that has a spirit — you are a spirit that has a body. This changes everything about how you approach prayer, work, and relationships.</div>
-              <div class="outline-point">Man is triune: spirit (the real you, born again in Christ), soul (mind, will, emotions — being renewed), and body (presented as a living sacrifice).</div>
-              <div class="outline-point">The new birth regenerates your spirit — not a moral upgrade, but a spiritual rebirth. The same Spirit who raised Christ now dwells in you (Rom 8:11).</div>
-              <div class="outline-point">Workers who neglect their spirit serve from the flesh — striving, burnout, offence. Workers who nurture their spirit serve with grace and supernatural effectiveness.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">B — Speaking in Tongues</div>
-              <div class="outline-point">Speaking in tongues is the initial physical evidence of being filled with the Holy Spirit (Acts 2:4). It is a Spirit-enabled language that bypasses the natural mind.</div>
-              <div class="outline-point">It builds up and strengthens your inner man — essential for sustainable service (1 Cor 14:4). It enables prayer beyond the limits of natural understanding (Rom 8:26–27).</div>
-              <div class="outline-point">Hagin: "Your spirit prays when you pray in tongues… the spirit of man is the candle of the Lord." Praying in tongues daily keeps your spirit in contact with the Father of spirits.</div>
-              <div class="outline-point"><strong>Practical Challenge:</strong> Commit to 15–30 minutes of praying in tongues every morning during this training. Keep a journal of what you notice about your spiritual sensitivity.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">C — The 9 Gifts of the Spirit (1 Cor 12:8–10)</div>
-              <div class="outline-point"><strong>Revelation Gifts:</strong> Word of Wisdom · Word of Knowledge · Discerning of Spirits</div>
-              <div class="outline-point"><strong>Power Gifts:</strong> Gift of Faith · Gifts of Healings · Working of Miracles</div>
-              <div class="outline-point"><strong>Utterance Gifts:</strong> Prophecy · Different Kinds of Tongues · Interpretation of Tongues</div>
-              <div class="outline-point">Gifts are given for the common good (1 Cor 12:7) — they are tools for ministry, not credentials for recognition. Desire them earnestly and exercise them in love.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">D — The 9 Fruits of the Spirit (Gal 5:22–23)</div>
-              <div class="outline-point">Love · Joy · Peace · Forbearance · Kindness · Goodness · Faithfulness · Gentleness · Self-Control</div>
-              <div class="outline-point"><strong>Key distinction: Gifts are given, fruit is grown.</strong> Gifts without fruit produces ministry without character — which eventually shipwrecks both the minister and those they serve.</div>
-              <div class="outline-point">A church worker is assessed not by how dramatic their gifts are, but by how consistently the fruit is visible. This is what full onboarding looks for — not performance, but character.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">Discussion Questions</div>
-              <div class="outline-point">How has knowing you are a spirit-being changed how you approach your daily life?</div>
-              <div class="outline-point">How consistent is your practice of praying in tongues? What difference have you noticed?</div>
-              <div class="outline-point">Which fruit of the Spirit do you find hardest to consistently demonstrate? What disciplines might help?</div>
-            </div>
-
-            <div class="hagin-quote">"Your spirit prays when you pray in tongues... the spirit of man is the candle of the Lord." — Hagin, Led by the Spirit Ch. 4</div>
-            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(1)">Explore with AI Tutor ✦</button>
+          <div class="cur-mod-btn" id="cmb-2" onclick="openCurMod(2)">
+            <div class="cur-mod-num">2</div>
+            <div class="cur-mod-info"><strong>Module 2</strong><span>Kingdom Agenda</span></div>
+            <div class="mod-badge mb-now">Now</div>
+          </div>
+          <div class="cur-mod-btn" id="cmb-3" onclick="openCurMod(3)">
+            <div class="cur-mod-num">3</div>
+            <div class="cur-mod-info"><strong>Module 3</strong><span>Self Leadership &amp; Accountability</span></div>
+            <div class="mod-badge mb-next">Month 2</div>
+          </div>
+          <div class="cur-mod-btn" id="cmb-4" onclick="openCurMod(4)">
+            <div class="cur-mod-num">4</div>
+            <div class="cur-mod-info"><strong>Module 4</strong><span>Technical Training &amp; Orientation</span></div>
+            <div class="mod-badge mb-next">Month 2</div>
+          </div>
+          <div class="cur-mod-btn" id="cmb-5" onclick="openCurMod(5)">
+            <div class="cur-mod-num">5</div>
+            <div class="cur-mod-info"><strong>Module 5</strong><span>Etiquette</span></div>
+            <div class="mod-badge mb-next">Month 3</div>
+          </div>
+          <div class="cur-mod-btn" id="cmb-6" onclick="openCurMod(6)">
+            <div class="cur-mod-num">6</div>
+            <div class="cur-mod-info"><strong>Module 6</strong><span>Wisdom</span></div>
+            <div class="mod-badge mb-next">Month 3</div>
           </div>
         </div>
 
-        <div class="mod-acc-item current-mod" id="macc-2">
-          <div class="mod-acc-hd" onclick="toggleMod(2)">
-            <div class="mod-num" style="flex-shrink:0">2</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 2 — Kingdom Agenda</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 1 · Why We Serve · Three Loves · Commitment</div>
-            </div>
-            <div class="mod-badge mb-now" style="flex-shrink:0">Now</div>
-            <div class="acc-arrow" id="arr-2">▸</div>
-          </div>
-          <div class="mod-acc-body" id="body-2" style="display:none">
-            <div class="theme-grid">
-              <div class="theme-card"><div class="tc-icon">💛</div><div class="tc-label">Love compels, not duty</div><div class="tc-ref">2 Cor 5:14</div></div>
-              <div class="theme-card"><div class="tc-icon">⛓️</div><div class="tc-label">Saved from spiritual death</div><div class="tc-ref">Eph 2:1–10</div></div>
-              <div class="theme-card"><div class="tc-icon">🌍</div><div class="tc-label">Love God · World · Self</div><div class="tc-ref">Matt 22:37–39</div></div>
-              <div class="theme-card"><div class="tc-icon">🔒</div><div class="tc-label">Commitment = consistency</div><div class="tc-ref">Luke 9:62</div></div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">A — Why Do We Serve?</div>
-              <div class="outline-point"><strong>Wrong motivations:</strong> Guilt · Reputation · Compensation · Fear · Tradition. None of these are sustainable — they all lead to burnout, bitterness, or backsliding.</div>
-              <div class="outline-point">Paul says Christ's love compels us (2 Cor 5:14) — not duty. The Greek word sunechei means "to grip tightly." When you truly encounter God's love, you cannot help but respond.</div>
-              <div class="outline-point">Jesus the Servant King: He deliberately laid down divine privilege to take on the nature of a servant (Phil 2:5–8). Servanthood is not below you — it was not below the Son of God.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">B — What Are We Saved From?</div>
-              <div class="outline-point">We were spiritually dead, enslaved to sin, under judgment, and without hope (Eph 2:1–3). Salvation is not a moral upgrade — it is a rescue and a recommissioning.</div>
-              <div class="outline-point">Saved from spiritual death · the dominion of sin · eternal separation from God · a purposeless life. Now created for good works (Eph 2:10).</div>
-              <div class="outline-point">Knowing what you were saved from makes you urgent about the salvation of others. Every person around you who doesn't know Christ is someone for whom Christ died.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">C — The Three Loves</div>
-              <div class="outline-point"><strong>Loving God:</strong> Your personal devotion comes before your service schedule. You serve because He asked you to — not because the church needs you to (Deut 6:5).</div>
-              <div class="outline-point"><strong>Loving the World Unto Salvation:</strong> One of your key requirements is to preach the gospel and bring someone to church. This is not a task to tick — it is love for the world God loves (John 3:16).</div>
-              <div class="outline-point"><strong>Loving Yourself:</strong> "Love your neighbour as yourself" assumes a healthy love of self. You are made in God's image, redeemed by Christ's blood, filled with the Holy Spirit. A worker who doesn't love themselves well will either burn out or under-deliver.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">D — Commitment</div>
-              <div class="outline-point">Commitment is not enthusiasm at the beginning — it is consistency in the middle and faithfulness at the end. Many people start well. Fewer finish well.</div>
-              <div class="outline-point">Commitment means: showing up when it's inconvenient · doing the work when unseen · staying submitted to leadership · loving difficult people · completing this training when life gets busy.</div>
-              <div class="outline-point"><strong>Challenge:</strong> Write out in your own words why you want to serve at TNY. Keep this statement and return to it whenever motivation dips.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">Discussion Questions</div>
-              <div class="outline-point">Honestly — is your motivation to serve love-driven or duty-driven right now?</div>
-              <div class="outline-point">What specifically were you saved from? How does the memory of that shape your compassion for others?</div>
-              <div class="outline-point">Which of the three loves do you find most challenging, and why?</div>
-            </div>
-
-            <div class="hagin-quote">"Conditions exist because we permit them to." — Hagin, Believer's Authority Ch. 4</div>
-            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(2)">Explore with AI Tutor ✦</button>
-          </div>
-        </div>
-
-        <div class="mod-acc-item" id="macc-3">
-          <div class="mod-acc-hd" onclick="toggleMod(3)">
-            <div class="mod-num" style="flex-shrink:0;background:rgba(28,63,212,0.5)">3</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 3 — Self Leadership &amp; Accountability</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 2 · Lead Yourself First · Renew Your Mind</div>
-            </div>
-            <div class="mod-badge mb-next" style="flex-shrink:0">Month 2</div>
-            <div class="acc-arrow" id="arr-3">▸</div>
-          </div>
-          <div class="mod-acc-body" id="body-3" style="display:none">
-            <div class="theme-grid">
-              <div class="theme-card"><div class="tc-icon">🏆</div><div class="tc-label">Self-governance first</div><div class="tc-ref">Prov 16:32</div></div>
-              <div class="theme-card"><div class="tc-icon">💪</div><div class="tc-label">Body under subjection</div><div class="tc-ref">1 Cor 9:27</div></div>
-              <div class="theme-card"><div class="tc-icon">🧠</div><div class="tc-label">Renew your mind</div><div class="tc-ref">Rom 12:2</div></div>
-              <div class="theme-card"><div class="tc-icon">🤝</div><div class="tc-label">Accountability = gift</div><div class="tc-ref">Prov 27:17</div></div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">A — The Principle of Self Leadership</div>
-              <div class="outline-point">You cannot lead others what you have not led in yourself. Every position of service is a form of leadership — and leadership begins within.</div>
-              <div class="outline-point">Your time, emotions, words, and habits all reveal whether the inward man or the outward man is in charge. Hagin: "The inward man must dominate the outward man — not the other way around."</div>
-              <div class="outline-point">Daniel distinguished himself through exceptional qualities in an ordinary setting (Dan 6:3). This is the standard for TNY workers — not just adequate, but excellent through Spirit-led diligence.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">B — Practical Self-Discipline</div>
-              <div class="outline-point"><strong>Your time:</strong> Your schedule reveals your priorities. Block time for prayer and the Word before anything else. Plan with church commitments as non-negotiables.</div>
-              <div class="outline-point"><strong>Your mind:</strong> Be transformed by the renewing of your mind (Rom 12:2). Guard what you consume. Meditate on the Word daily (Josh 1:8). Take every thought captive (2 Cor 10:5).</div>
-              <div class="outline-point"><strong>Your body:</strong> Your body is the temple of the Holy Spirit (1 Cor 6:19–20). Adequate rest is a spiritual discipline. Avoid habits that give the enemy a foothold (Eph 4:27).</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">C — Accountability as Gift</div>
-              <div class="outline-point">Most people resist accountability because they confuse it with surveillance. True accountability is not someone watching you to catch you failing — it is someone walking with you to help you succeed.</div>
-              <div class="outline-point">Biblical accountability is mutual, grace-based, specific, and consistent (James 5:16). It is not about shame — failure is met with truth and love.</div>
-              <div class="outline-point">During training, be honest with your trainer about your struggles. The things you hide will hold you back. Weekly check-ins, honest reporting, and receiving correction with humility are all part of this journey.</div>
-            </div>
-
-            <div class="outline-section">
-              <div class="outline-title">Discussion Questions</div>
-              <div class="outline-point">What is one area of your personal life where self-discipline has been consistently challenging? What might be the root cause?</div>
-              <div class="outline-point">How have you experienced accountability in the past — life-giving or damaging? What made the difference?</div>
-              <div class="outline-point">What one practical change to your daily routine would most improve your consistency as a trainee?</div>
-            </div>
-
-            <div class="hagin-quote">"The inward man must dominate the outward man — not the other way around." — Hagin, Led by the Spirit Ch. 6</div>
-            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(3)">Explore with AI Tutor ✦</button>
-          </div>
-        </div>
-
-        <div class="mod-acc-item" id="macc-4">
-          <div class="mod-acc-hd" onclick="toggleMod(4)">
-            <div class="mod-num" style="flex-shrink:0;background:rgba(28,63,212,0.5)">4</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 4 — Technical Training &amp; Orientation</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 2 · Excellence as Worship · Art of the Work</div>
-            </div>
-            <div class="mod-badge mb-next" style="flex-shrink:0">Month 2</div>
-            <div class="acc-arrow" id="arr-4">▸</div>
-          </div>
-          <div class="mod-acc-body" id="body-4" style="display:none">
-            <div class="theme-grid">
-              <div class="theme-card"><div class="tc-icon">⚒️</div><div class="tc-label">Spirit-filled excellence</div><div class="tc-ref">Ex 31:3</div></div>
-              <div class="theme-card"><div class="tc-icon">🙌</div><div class="tc-label">Work as unto the Lord</div><div class="tc-ref">Col 3:23–24</div></div>
-              <div class="theme-card"><div class="tc-icon">🫡</div><div class="tc-label">Submit to leadership</div><div class="tc-ref">Heb 13:17</div></div>
-              <div class="theme-card"><div class="tc-icon">🕊️</div><div class="tc-label">Conflict God's way</div><div class="tc-ref">Matt 18:15</div></div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">A — The Art of the Work</div>
-              <div class="outline-point">Bezalel was filled with the Spirit of God specifically for craftsmanship (Ex 31:3). The Holy Spirit empowers practical, technical, creative work — not just preaching and prayer.</div>
-              <div class="outline-point">Excellence is not perfectionism or comparison. It is giving your best to God's work as unto the Lord (Col 3:23–24). The audience that matters most is God — not people.</div>
-              <div class="outline-point">Preparation is part of service. An unprepared worker creates more work for others. Know your role, arrive early, anticipate needs, and communicate proactively.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">B — The Rules of Work</div>
-              <div class="outline-point"><strong>Submission to leadership:</strong> Church service is not a democracy. Follow your team lead even when you would do it differently. Express disagreement privately — never publicly (Heb 13:17).</div>
-              <div class="outline-point"><strong>Confidentiality:</strong> What is shared in the team stays in the team. Information about people's struggles or spiritual conditions is a sacred trust. Gossip — even framed as a prayer request — is a serious violation.</div>
-              <div class="outline-point"><strong>Conflict resolution:</strong> Address conflict directly with the person involved — not a third party. Deal with offences quickly and in love (Matt 18:15). Never use social media or group chats to process church conflict.</div>
-              <div class="outline-point"><strong>Team relationships:</strong> Speak well of colleagues always. Honour those in "smaller" roles — there are no small roles in the Kingdom. Build each other up with words and practical support.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">C — TNY Service Values</div>
-              <div class="outline-point">People First — every interaction is with a soul, not a task.</div>
-              <div class="outline-point">Presence over Performance — being fully engaged matters more than looking impressive.</div>
-              <div class="outline-point">Consistency over Intensity — reliable weekly service is more valuable than one spectacular Sunday per month.</div>
-              <div class="outline-point">Feedback as Growth — receive correction as a gift. It means someone cares enough to invest in your development.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">Discussion Questions</div>
-              <div class="outline-point">Describe a time when someone's excellence in a service role significantly affected your worship experience. What made it excellent?</div>
-              <div class="outline-point">How do you typically handle disagreement with leadership decisions? What is the Kingdom way?</div>
-              <div class="outline-point">What is one area in your church role where you need to grow in skill or knowledge?</div>
-            </div>
-            <div class="hagin-quote">"All the authority that can be exercised on earth must be exercised through the Church — Christ is not here in person." — Hagin, Believer's Authority Ch. 4</div>
-            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(4)">Explore with AI Tutor ✦</button>
-          </div>
-        </div>
-
-        <div class="mod-acc-item" id="macc-5">
-          <div class="mod-acc-hd" onclick="toggleMod(5)">
-            <div class="mod-num" style="flex-shrink:0;background:rgba(240,24,122,0.5)">5</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 5 — Etiquette</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 3 · Conduct · Dress · Communication</div>
-            </div>
-            <div class="mod-badge mb-next" style="flex-shrink:0">Month 3</div>
-            <div class="acc-arrow" id="arr-5">▸</div>
-          </div>
-          <div class="mod-acc-body" id="body-5" style="display:none">
-            <div class="theme-grid">
-              <div class="theme-card"><div class="tc-icon">👑</div><div class="tc-label">Above reproach</div><div class="tc-ref">1 Tim 3:2</div></div>
-              <div class="theme-card"><div class="tc-icon">✨</div><div class="tc-label">Good life before the world</div><div class="tc-ref">1 Pet 2:12</div></div>
-              <div class="theme-card"><div class="tc-icon">💬</div><div class="tc-label">Life-giving speech</div><div class="tc-ref">Prov 18:21</div></div>
-              <div class="theme-card"><div class="tc-icon">📱</div><div class="tc-label">Digital as testimony</div><div class="tc-ref">1 Cor 10:31</div></div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">A — Conduct: The Standard is Above Reproach</div>
-              <div class="outline-point">The biblical standard for church workers is not "pretty good" — it is above reproach. Nothing in your conduct should give legitimate grounds for accusation against the character of God or the integrity of the church (1 Tim 3:2).</div>
-              <div class="outline-point">On service days: be early, focused, and fully present. In team spaces: be encouraging, not critical. In public: remember you are always a representative. In private: maintain the same standard — God sees what others do not.</div>
-              <div class="outline-point"><strong>Attitudes to cultivate:</strong> Warmth · Humility · Reliability · Positivity · Appropriate relational boundaries</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">B — Dress</div>
-              <div class="outline-point">Your clothing communicates before you speak. A TNY worker's dress should say: "I take this seriously. I respect this space. I respect you."</div>
-              <div class="outline-point">Dress neatly and appropriately for your service role. Avoid clothing that is revealing, dishevelled, or disruptive to the worship environment. When in doubt, err on the side of more formal.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">C — Communication</div>
-              <div class="outline-point"><strong>Speech:</strong> Speak words that build up (Eph 4:29). Address people by name. Listen more than you speak. Avoid sarcasm, gossip, exaggeration, and language that diminishes others (Prov 18:21).</div>
-              <div class="outline-point"><strong>Digital:</strong> Respond to messages within 24 hours. Be careful with tone in written messages. Your social media platforms are public-facing — avoid posting content that contradicts your witness.</div>
-              <div class="outline-point"><strong>Welcoming people:</strong> For many visitors, you are their first impression of Jesus. Make eye contact, smile genuinely, introduce yourself, ask their name. Never leave a first-time visitor standing alone.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">Discussion Questions</div>
-              <div class="outline-point">Think of a time when someone's conduct significantly impacted your impression of a church — positively or negatively. What stood out?</div>
-              <div class="outline-point">Where in your conduct, communication, or presentation is there room for growth to more faithfully represent Christ?</div>
-              <div class="outline-point">How do you currently manage your digital presence? Does it align with your identity as a church worker?</div>
-            </div>
-            <div class="hagin-quote">"Unless you keep a tender conscience, spiritual things will be indistinct to you." — Hagin, Led by the Spirit Ch. 16</div>
-            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(5)">Explore with AI Tutor ✦</button>
-          </div>
-        </div>
-
-        <div class="mod-acc-item" id="macc-6">
-          <div class="mod-acc-hd" onclick="toggleMod(6)">
-            <div class="mod-num" style="flex-shrink:0;background:rgba(240,24,122,0.5)">6</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13.5px;font-weight:700;color:var(--cream)">Module 6 — Wisdom</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Month 3 · Train Your Spirit · Wise Decisions · Long Game</div>
-            </div>
-            <div class="mod-badge mb-next" style="flex-shrink:0">Month 3</div>
-            <div class="acc-arrow" id="arr-6">▸</div>
-          </div>
-          <div class="mod-acc-body" id="body-6" style="display:none">
-            <div class="theme-grid">
-              <div class="theme-card"><div class="tc-icon">🔦</div><div class="tc-label">Fear of Lord = foundation</div><div class="tc-ref">Prov 9:10</div></div>
-              <div class="theme-card"><div class="tc-icon">📖</div><div class="tc-label">Meditate + Practise Word</div><div class="tc-ref">Josh 1:8</div></div>
-              <div class="theme-card"><div class="tc-icon">🧭</div><div class="tc-label">The inward witness</div><div class="tc-ref">Prov 20:27</div></div>
-              <div class="theme-card"><div class="tc-icon">📈</div><div class="tc-label">Continuous learning</div><div class="tc-ref">Ecc 10:10</div></div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">A — What Wisdom Is</div>
-              <div class="outline-point"><strong>Knowledge</strong> is accumulating information. <strong>Understanding</strong> is interpreting it. <strong>Wisdom</strong> is applying it in real situations — knowing what to do, when to speak, when to wait, when to confront, when to let God handle it.</div>
-              <div class="outline-point">True wisdom begins with the fear of the Lord (Prov 9:10) — a deep, reverent recognition that God is God and His ways are higher than ours. The wise worker prays before deciding and holds their opinions loosely.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">B — Continuous Learning</div>
-              <div class="outline-point">A worker who is not growing is falling behind. The Kingdom is advancing, the culture is changing, people's needs are evolving (Hos 4:6).</div>
-              <div class="outline-point">Learning requires humility — you must be willing to be wrong, to be corrected, to discover that someone else's way is better. Seek feedback actively. Study people who are excelling in your area. Learn from failure with honesty and without self-condemnation.</div>
-              <div class="outline-point">Hagin's 4 rules for training the human spirit: (1) Meditate the Word daily · (2) Practise and do the Word · (3) Give the Word first place in every decision · (4) Instantly obey the voice of your spirit.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">C — Applying Wisdom</div>
-              <div class="outline-point"><strong>The WORD framework for decisions:</strong></div>
-              <div class="outline-point">W — What does the Word of God say? Scripture is the first filter.</div>
-              <div class="outline-point">O — What do Ordained leaders in my life counsel? Seek wisdom from those placed over you.</div>
-              <div class="outline-point">R — What does the Spirit's inner Witness say? What is your peace level?</div>
-              <div class="outline-point">D — What do the consequences reveal? Wisdom looks ahead — who is affected and how?</div>
-              <div class="outline-point"><strong>Wisdom in relationships:</strong> Be slow to assume negative intent. Be quick to give the benefit of the doubt. Be thoughtful with your words — once spoken, they cannot be unspoken.</div>
-              <div class="outline-point"><strong>Know your limits:</strong> Wise workers do not counsel beyond their ability, carry burdens beyond their assignment, or make decisions beyond their authority. Know your role, know your capacity, know when to escalate.</div>
-            </div>
-            <div class="outline-section">
-              <div class="outline-title">Discussion Questions</div>
-              <div class="outline-point">What is the wisest decision you have ever made, and what made it wise? What process did you use?</div>
-              <div class="outline-point">Where in your life or service do you most need God's wisdom right now?</div>
-              <div class="outline-point">What is one area of knowledge or skill related to your church role you want to develop in the next six months?</div>
-            </div>
-            <div class="hagin-quote">"The inward witness is just as supernatural as guidance through visions — it is just not as spectacular." — Hagin, Led by the Spirit Ch. 7</div>
-            <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px" onclick="openMod(6)">Explore with AI Tutor ✦</button>
-          </div>
+        <!-- RIGHT: Content panel -->
+        <div class="cur-panel" id="cur-panel">
+          <!-- Filled by openCurMod() -->
         </div>
 
       </div>
@@ -1240,83 +1005,73 @@ html, body {
 
       <!-- READING JOURNAL -->
       <div style="margin-top:20px">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:10px">📓 Reading Journal</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:12px">📓 Reading Journal</div>
 
-        <!-- Book 1 Midway — Week 4 -->
-        <div class="card" style="margin-bottom:12px;border-left:3px solid var(--blue)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div>
-              <div style="font-size:12px;font-weight:800;color:var(--blue)">Book 1 — Midway Check-in</div>
-              <div style="font-size:11px;color:var(--muted)">The Believer's Authority · After Week 4</div>
+        <!-- Row 1: Midway check-ins side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+
+          <div class="card card-0" style="border-top:3px solid var(--blue)">
+            <div style="font-size:11px;font-weight:800;color:var(--blue);margin-bottom:2px">Book 1 — Midway</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Believer's Authority · Week 4</div>
+            <div id="j-b1mid-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
+            <div id="j-b1mid-form">
+              <textarea class="journal-ta" id="j-b1mid-q1" placeholder="Most important thing learned so far?"></textarea>
+              <textarea class="journal-ta" id="j-b1mid-q2" placeholder="Which chapter challenged you most and why?"></textarea>
+              <textarea class="journal-ta" id="j-b1mid-q3" placeholder="How are you applying it to daily life?"></textarea>
+              <button class="btn btn-yellow" style="width:100%;margin-top:6px;font-size:12px" onclick="submitJournal('b1mid','Book 1 Midway')">Submit ✓</button>
             </div>
-            <div id="j-b1mid-badge" style="font-size:10px;padding:3px 9px;border-radius:20px;background:var(--deep);color:var(--muted)">Not submitted</div>
+            <div id="j-b1mid-done" style="display:none;font-size:12px;color:var(--success);padding:6px 0">✓ Submitted</div>
           </div>
-          <div id="j-b1mid-form">
-            <textarea class="journal-ta" id="j-b1mid-q1" placeholder="What is the most important thing you've learned so far from The Believer's Authority?"></textarea>
-            <textarea class="journal-ta" id="j-b1mid-q2" placeholder="Which chapter has challenged you most and why?"></textarea>
-            <textarea class="journal-ta" id="j-b1mid-q3" placeholder="How are you applying what you've read to your daily life?"></textarea>
-            <button class="btn btn-yellow" style="width:100%;margin-top:8px" onclick="submitJournal('b1mid','Book 1 Midway')">Submit Check-in</button>
+
+          <div class="card card-0" style="border-top:3px solid var(--pink)">
+            <div style="font-size:11px;font-weight:800;color:var(--pink);margin-bottom:2px">Book 2 — Midway</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Led by the Spirit · Week 10</div>
+            <div id="j-b2mid-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
+            <div id="j-b2mid-form">
+              <textarea class="journal-ta" id="j-b2mid-q1" placeholder="What is the inward witness, in your own words?"></textarea>
+              <textarea class="journal-ta" id="j-b2mid-q2" placeholder="How has this changed how you make decisions?"></textarea>
+              <textarea class="journal-ta" id="j-b2mid-q3" placeholder="How are you applying it as a worker-in-training?"></textarea>
+              <button class="btn btn-yellow" style="width:100%;margin-top:6px;font-size:12px" onclick="submitJournal('b2mid','Book 2 Midway')">Submit ✓</button>
+            </div>
+            <div id="j-b2mid-done" style="display:none;font-size:12px;color:var(--success);padding:6px 0">✓ Submitted</div>
           </div>
-          <div id="j-b1mid-done" style="display:none;font-size:13px;color:var(--success);padding:8px 0">✓ Submitted — your trainer can see your responses.</div>
+
         </div>
 
-        <!-- Book 1 Final — Week 7 -->
-        <div class="card" style="margin-bottom:12px;border-left:3px solid var(--blue)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div>
-              <div style="font-size:12px;font-weight:800;color:var(--blue)">Book 1 — Final Reflection</div>
-              <div style="font-size:11px;color:var(--muted)">The Believer's Authority · End of Week 7</div>
-            </div>
-            <div id="j-b1final-badge" style="font-size:10px;padding:3px 9px;border-radius:20px;background:var(--deep);color:var(--muted)">Not submitted</div>
-          </div>
-          <div id="j-b1final-form">
-            <textarea class="journal-ta" id="j-b1final-q1" placeholder="What is your single biggest takeaway from The Believer's Authority?"></textarea>
-            <textarea class="journal-ta" id="j-b1final-q2" placeholder="How has this book changed how you think about your authority and identity in Christ?"></textarea>
-            <textarea class="journal-ta" id="j-b1final-q3" placeholder="One thing you will do differently because of this book."></textarea>
-            <button class="btn btn-yellow" style="width:100%;margin-top:8px" onclick="submitJournal('b1final','Book 1 Final')">Submit Reflection</button>
-          </div>
-          <div id="j-b1final-done" style="display:none;font-size:13px;color:var(--success);padding:8px 0">✓ Submitted — your trainer can see your responses.</div>
-        </div>
+        <!-- Row 2: Final reflections side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 
-        <!-- Book 2 Midway — Week 10 -->
-        <div class="card" style="margin-bottom:12px;border-left:3px solid var(--pink)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div>
-              <div style="font-size:12px;font-weight:800;color:var(--pink)">Book 2 — Midway Check-in</div>
-              <div style="font-size:11px;color:var(--muted)">How to be Led by the Spirit · After Week 10</div>
+          <div class="card card-0" style="border-top:3px solid var(--blue)">
+            <div style="font-size:11px;font-weight:800;color:var(--blue);margin-bottom:2px">Book 1 — Final</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Believer's Authority · Week 7</div>
+            <div id="j-b1final-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
+            <div id="j-b1final-form">
+              <textarea class="journal-ta" id="j-b1final-q1" placeholder="Your single biggest takeaway from this book?"></textarea>
+              <textarea class="journal-ta" id="j-b1final-q2" placeholder="How has it changed how you see your authority in Christ?"></textarea>
+              <textarea class="journal-ta" id="j-b1final-q3" placeholder="One thing you will do differently because of this book."></textarea>
+              <button class="btn btn-yellow" style="width:100%;margin-top:6px;font-size:12px" onclick="submitJournal('b1final','Book 1 Final')">Submit ✓</button>
             </div>
-            <div id="j-b2mid-badge" style="font-size:10px;padding:3px 9px;border-radius:20px;background:var(--deep);color:var(--muted)">Not submitted</div>
+            <div id="j-b1final-done" style="display:none;font-size:12px;color:var(--success);padding:6px 0">✓ Submitted</div>
           </div>
-          <div id="j-b2mid-form">
-            <textarea class="journal-ta" id="j-b2mid-q1" placeholder="In your own words, what is the inward witness and how have you experienced it?"></textarea>
-            <textarea class="journal-ta" id="j-b2mid-q2" placeholder="What is the difference between feeling and spirit-leading? How has this changed how you make decisions?"></textarea>
-            <textarea class="journal-ta" id="j-b2mid-q3" placeholder="How are you applying what you've read to your daily walk as a worker-in-training?"></textarea>
-            <button class="btn btn-yellow" style="width:100%;margin-top:8px" onclick="submitJournal('b2mid','Book 2 Midway')">Submit Check-in</button>
-          </div>
-          <div id="j-b2mid-done" style="display:none;font-size:13px;color:var(--success);padding:8px 0">✓ Submitted — your trainer can see your responses.</div>
-        </div>
 
-        <!-- Book 2 Final — Week 12 -->
-        <div class="card" style="border-left:3px solid var(--pink)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div>
-              <div style="font-size:12px;font-weight:800;color:var(--pink)">Book 2 — Final Reflection</div>
-              <div style="font-size:11px;color:var(--muted)">How to be Led by the Spirit · End of Week 12</div>
+          <div class="card card-0" style="border-top:3px solid var(--pink)">
+            <div style="font-size:11px;font-weight:800;color:var(--pink);margin-bottom:2px">Book 2 — Final</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Led by the Spirit · Week 12</div>
+            <div id="j-b2final-badge" style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--deep);color:var(--muted);margin-bottom:10px">Not submitted</div>
+            <div id="j-b2final-form">
+              <textarea class="journal-ta" id="j-b2final-q1" placeholder="Your single biggest takeaway from this book?"></textarea>
+              <textarea class="journal-ta" id="j-b2final-q2" placeholder="How has the teaching on being led by the Spirit changed your daily walk?"></textarea>
+              <textarea class="journal-ta" id="j-b2final-q3" placeholder="One thing you will do differently as a church worker because of this book."></textarea>
+              <button class="btn btn-yellow" style="width:100%;margin-top:6px;font-size:12px" onclick="submitJournal('b2final','Book 2 Final')">Submit ✓</button>
             </div>
-            <div id="j-b2final-badge" style="font-size:10px;padding:3px 9px;border-radius:20px;background:var(--deep);color:var(--muted)">Not submitted</div>
+            <div id="j-b2final-done" style="display:none;font-size:12px;color:var(--success);padding:6px 0">✓ Submitted</div>
           </div>
-          <div id="j-b2final-form">
-            <textarea class="journal-ta" id="j-b2final-q1" placeholder="What is your single biggest takeaway from How to be Led by the Spirit of God?"></textarea>
-            <textarea class="journal-ta" id="j-b2final-q2" placeholder="How has Hagin's teaching on the three ways God leads changed how you walk with God daily?"></textarea>
-            <textarea class="journal-ta" id="j-b2final-q3" placeholder="One specific thing you will do differently as a church worker because of this book."></textarea>
-            <button class="btn btn-yellow" style="width:100%;margin-top:8px" onclick="submitJournal('b2final','Book 2 Final')">Submit Reflection</button>
-          </div>
-          <div id="j-b2final-done" style="display:none;font-size:13px;color:var(--success);padding:8px 0">✓ Submitted — your trainer can see your responses.</div>
+
         </div>
       </div>
     </div>
 
-        <!-- ── QUIZ ── -->
+            <!-- ── QUIZ ── -->
     <div class="page" id="p-quiz">
       <div class="ph"><h2>Module Quiz</h2><p>AI-generated questions tailored to each module.</p></div>
       <div class="two-col">
@@ -1851,6 +1606,208 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
+// ── CURRICULUM SIDE PANEL ──
+const CUR_MODS = {
+  1: {
+    title: 'Module 1 — Understanding Your Spirituality',
+    sub: 'Month 1 · Man is a Spirit · Tongues · Gifts & Fruits',
+    quote: '"Your spirit prays when you pray in tongues... the spirit of man is the candle of the Lord." — How to be Led by the Spirit, Ch. 4',
+    tabs: [
+      { label: 'A — Man is a Spirit', content: `
+        <div class="outline-point">You are not a body that has a spirit — you are a spirit that has a body. This changes everything about how you approach prayer, work, and relationships.</div>
+        <div class="outline-point">Man is triune: spirit (the real you, born again in Christ), soul (mind, will, emotions — being renewed), and body (presented as a living sacrifice).</div>
+        <div class="outline-point">The new birth regenerates your spirit — not a moral upgrade, but a spiritual rebirth. The same Spirit who raised Christ now dwells in you (Rom 8:11).</div>
+        <div class="outline-point">Workers who neglect their spirit serve from the flesh — striving, burnout, offence. Workers who nurture their spirit serve with grace and supernatural effectiveness.</div>` },
+      { label: 'B — Tongues', content: `
+        <div class="outline-point">Speaking in tongues is the initial physical evidence of being filled with the Holy Spirit (Acts 2:4). It is a Spirit-enabled language that bypasses the natural mind.</div>
+        <div class="outline-point">It builds up and strengthens your inner man — essential for sustainable service (1 Cor 14:4). It enables prayer beyond the limits of natural understanding (Rom 8:26–27).</div>
+        <div class="outline-point">"Your spirit prays when you pray in tongues... the spirit of man is the candle of the Lord." Praying in tongues daily keeps your spirit in contact with the Father of spirits.</div>
+        <div class="outline-point"><strong>Practical Challenge:</strong> Commit to 15–30 minutes of praying in tongues every morning during this training. Keep a journal of what you notice about your spiritual sensitivity.</div>` },
+      { label: 'C — 9 Gifts', content: `
+        <div class="outline-point"><strong>Revelation Gifts:</strong> Word of Wisdom · Word of Knowledge · Discerning of Spirits</div>
+        <div class="outline-point"><strong>Power Gifts:</strong> Gift of Faith · Gifts of Healings · Working of Miracles</div>
+        <div class="outline-point"><strong>Utterance Gifts:</strong> Prophecy · Different Kinds of Tongues · Interpretation of Tongues</div>
+        <div class="outline-point">Gifts are given for the common good (1 Cor 12:7) — they are tools for ministry, not credentials for recognition. Desire them earnestly and exercise them in love.</div>` },
+      { label: 'D — 9 Fruits', content: `
+        <div class="outline-point">Love · Joy · Peace · Forbearance · Kindness · Goodness · Faithfulness · Gentleness · Self-Control</div>
+        <div class="outline-point"><strong>Key distinction: Gifts are given, fruit is grown.</strong> Gifts without fruit produces ministry without character — which eventually shipwrecks both the minister and those they serve.</div>
+        <div class="outline-point">A church worker is assessed not by how dramatic their gifts are, but by how consistently the fruit is visible. This is what full onboarding looks for — not performance, but character.</div>` },
+      { label: '✦ Discuss', content: `
+        <div class="outline-point">How has knowing you are a spirit-being changed how you approach your daily life?</div>
+        <div class="outline-point">How consistent is your practice of praying in tongues? What difference have you noticed?</div>
+        <div class="outline-point">Which fruit of the Spirit do you find hardest to consistently demonstrate? What disciplines might help?</div>` }
+    ]
+  },
+  2: {
+    title: 'Module 2 — Kingdom Agenda',
+    sub: 'Month 1 · Why We Serve · Three Loves · Commitment',
+    quote: '"Conditions exist because we permit them to." — The Believer\'s Authority, Ch. 4',
+    tabs: [
+      { label: 'A — Why We Serve', content: `
+        <div class="outline-point"><strong>Wrong motivations:</strong> Guilt · Reputation · Compensation · Fear · Tradition. None of these are sustainable — they all lead to burnout, bitterness, or backsliding.</div>
+        <div class="outline-point">Paul says Christ\'s love compels us (2 Cor 5:14) — not duty. The Greek word sunechei means "to grip tightly." When you truly encounter God\'s love, you cannot help but respond.</div>
+        <div class="outline-point">Jesus the Servant King deliberately laid down divine privilege to take on the nature of a servant (Phil 2:5–8). Servanthood is not below you — it was not below the Son of God.</div>` },
+      { label: 'B — What We\'re Saved From', content: `
+        <div class="outline-point">We were spiritually dead, enslaved to sin, under judgment, and without hope (Eph 2:1–3). Salvation is not a moral upgrade — it is a rescue and a recommissioning.</div>
+        <div class="outline-point">Saved from spiritual death · the dominion of sin · eternal separation from God · a purposeless life. Now created for good works (Eph 2:10).</div>
+        <div class="outline-point">Knowing what you were saved from makes you urgent about the salvation of others. Every person around you who doesn\'t know Christ is someone for whom Christ died.</div>` },
+      { label: 'C — Three Loves', content: `
+        <div class="outline-point"><strong>Loving God:</strong> Your personal devotion comes before your service schedule. You serve because He asked you to — not because the church needs you to (Deut 6:5).</div>
+        <div class="outline-point"><strong>Loving the World Unto Salvation:</strong> One of your key requirements is to preach the gospel and bring someone to church. This is not a task to tick — it is love for the world God loves (John 3:16).</div>
+        <div class="outline-point"><strong>Loving Yourself:</strong> "Love your neighbour as yourself" assumes a healthy love of self. You are made in God\'s image, redeemed by Christ\'s blood, filled with the Holy Spirit. A worker who doesn\'t love themselves well will either burn out or under-deliver.</div>` },
+      { label: 'D — Commitment', content: `
+        <div class="outline-point">Commitment is not enthusiasm at the beginning — it is consistency in the middle and faithfulness at the end. Many people start well. Fewer finish well.</div>
+        <div class="outline-point">Commitment means: showing up when it\'s inconvenient · doing the work when unseen · staying submitted to leadership · loving difficult people · completing this training when life gets busy.</div>
+        <div class="outline-point"><strong>Challenge:</strong> Write out in your own words why you want to serve at TNY. Keep this statement and return to it whenever motivation dips.</div>` },
+      { label: '✦ Discuss', content: `
+        <div class="outline-point">Honestly — is your motivation to serve love-driven or duty-driven right now?</div>
+        <div class="outline-point">What specifically were you saved from? How does the memory of that shape your compassion for others?</div>
+        <div class="outline-point">Which of the three loves do you find most challenging, and why?</div>` }
+    ]
+  },
+  3: {
+    title: 'Module 3 — Self Leadership & Accountability',
+    sub: 'Month 2 · Lead Yourself First · Renew Your Mind',
+    quote: '"The inward man must dominate the outward man — not the other way around." — How to be Led by the Spirit, Ch. 6',
+    tabs: [
+      { label: 'A — Self Leadership', content: `
+        <div class="outline-point">You cannot lead others what you have not led in yourself. Every position of service is a form of leadership — and leadership begins within.</div>
+        <div class="outline-point">Your time, emotions, words, and habits all reveal whether the inward man or the outward man is in charge. "The inward man must dominate the outward man — not the other way around."</div>
+        <div class="outline-point">Daniel distinguished himself through exceptional qualities in an ordinary setting (Dan 6:3). This is the standard for TNY workers — not just adequate, but excellent through Spirit-led diligence.</div>` },
+      { label: 'B — Self-Discipline', content: `
+        <div class="outline-point"><strong>Your time:</strong> Your schedule reveals your priorities. Block time for prayer and the Word before anything else. Plan with church commitments as non-negotiables.</div>
+        <div class="outline-point"><strong>Your mind:</strong> Be transformed by the renewing of your mind (Rom 12:2). Guard what you consume. Meditate on the Word daily (Josh 1:8). Take every thought captive (2 Cor 10:5).</div>
+        <div class="outline-point"><strong>Your body:</strong> Your body is the temple of the Holy Spirit (1 Cor 6:19–20). Adequate rest is a spiritual discipline. Avoid habits that give the enemy a foothold (Eph 4:27).</div>` },
+      { label: 'C — Accountability', content: `
+        <div class="outline-point">Most people resist accountability because they confuse it with surveillance. True accountability is not someone watching you to catch you failing — it is someone walking with you to help you succeed.</div>
+        <div class="outline-point">Biblical accountability is mutual, grace-based, specific, and consistent (James 5:16). It is not about shame — failure is met with truth and love.</div>
+        <div class="outline-point">During training, be honest with your trainer about your struggles. The things you hide will hold you back. Weekly check-ins, honest reporting, and receiving correction with humility are all part of this journey.</div>` },
+      { label: '✦ Discuss', content: `
+        <div class="outline-point">What is one area of your personal life where self-discipline has been consistently challenging? What might be the root cause?</div>
+        <div class="outline-point">How have you experienced accountability in the past — life-giving or damaging? What made the difference?</div>
+        <div class="outline-point">What one practical change to your daily routine would most improve your consistency as a trainee?</div>` }
+    ]
+  },
+  4: {
+    title: 'Module 4 — Technical Training & Orientation',
+    sub: 'Month 2 · Excellence as Worship · Art of the Work',
+    quote: '"All authority on earth must be exercised through the Church — Christ is not here in person." — The Believer\'s Authority, Ch. 4',
+    tabs: [
+      { label: 'A — Art of the Work', content: `
+        <div class="outline-point">Bezalel was filled with the Spirit of God specifically for craftsmanship (Ex 31:3). The Holy Spirit empowers practical, technical, creative work — not just preaching and prayer.</div>
+        <div class="outline-point">Excellence is not perfectionism or comparison. It is giving your best to God\'s work as unto the Lord (Col 3:23–24). The audience that matters most is God — not people.</div>
+        <div class="outline-point">Preparation is part of service. An unprepared worker creates more work for others. Know your role, arrive early, anticipate needs, and communicate proactively.</div>` },
+      { label: 'B — Rules of Work', content: `
+        <div class="outline-point"><strong>Submission:</strong> Church service is not a democracy. Follow your team lead even when you would do it differently. Express disagreement privately — never publicly (Heb 13:17).</div>
+        <div class="outline-point"><strong>Confidentiality:</strong> What is shared in the team stays in the team. Information about people\'s struggles or spiritual conditions is a sacred trust.</div>
+        <div class="outline-point"><strong>Conflict:</strong> Address conflict directly with the person involved — not a third party. Deal with offences quickly and in love (Matt 18:15). Never use social media to process church conflict.</div>
+        <div class="outline-point"><strong>Relationships:</strong> Speak well of colleagues always. Honour those in "smaller" roles — there are no small roles in the Kingdom.</div>` },
+      { label: 'C — TNY Values', content: `
+        <div class="outline-point">People First — every interaction is with a soul, not a task.</div>
+        <div class="outline-point">Presence over Performance — being fully engaged matters more than looking impressive.</div>
+        <div class="outline-point">Consistency over Intensity — reliable weekly service is more valuable than one spectacular Sunday per month.</div>
+        <div class="outline-point">Feedback as Growth — receive correction as a gift. It means someone cares enough to invest in your development.</div>
+        <div class="outline-point">Kingdom Perspective — your work on service day has eternal consequences.</div>` },
+      { label: '✦ Discuss', content: `
+        <div class="outline-point">Describe a time when someone\'s excellence in a service role significantly affected your worship experience. What made it excellent?</div>
+        <div class="outline-point">How do you typically handle disagreement with leadership decisions? What is the Kingdom way?</div>
+        <div class="outline-point">What is one area in your church role where you need to grow in skill or knowledge?</div>` }
+    ]
+  },
+  5: {
+    title: 'Module 5 — Etiquette',
+    sub: 'Month 3 · Conduct · Dress · Communication',
+    quote: '"Unless you keep a tender conscience, spiritual things will be indistinct to you." — How to be Led by the Spirit, Ch. 16',
+    tabs: [
+      { label: 'A — Conduct', content: `
+        <div class="outline-point">The biblical standard for church workers is not "pretty good" — it is above reproach. Nothing in your conduct should give legitimate grounds for accusation against the character of God or the integrity of the church (1 Tim 3:2).</div>
+        <div class="outline-point">On service days: be early, focused, and fully present. In team spaces: be encouraging, not critical. In public: remember you are always a representative.</div>
+        <div class="outline-point"><strong>Attitudes to cultivate:</strong> Warmth · Humility · Reliability · Positivity · Appropriate relational boundaries</div>` },
+      { label: 'B — Dress', content: `
+        <div class="outline-point">Your clothing communicates before you speak. A TNY worker\'s dress should say: "I take this seriously. I respect this space. I respect you."</div>
+        <div class="outline-point">Dress neatly and appropriately for your service role. Avoid clothing that is revealing, dishevelled, or disruptive to the worship environment. When in doubt, err on the side of more formal.</div>` },
+      { label: 'C — Communication', content: `
+        <div class="outline-point"><strong>Speech:</strong> Speak words that build up (Eph 4:29). Address people by name. Listen more than you speak. Avoid sarcasm, gossip, and language that diminishes others (Prov 18:21).</div>
+        <div class="outline-point"><strong>Digital:</strong> Respond to messages within 24 hours. Be careful with tone in written messages. Your social media platforms are public-facing — avoid posting content that contradicts your witness.</div>
+        <div class="outline-point"><strong>Welcoming:</strong> For many visitors, you are their first impression of Jesus. Make eye contact, smile genuinely, introduce yourself, ask their name. Never leave a first-time visitor standing alone.</div>` },
+      { label: '✦ Discuss', content: `
+        <div class="outline-point">Think of a time when someone\'s conduct significantly impacted your impression of a church — positively or negatively. What stood out?</div>
+        <div class="outline-point">Where in your conduct, communication, or presentation is there room for growth to more faithfully represent Christ?</div>
+        <div class="outline-point">How do you currently manage your digital presence? Does it align with your identity as a church worker?</div>` }
+    ]
+  },
+  6: {
+    title: 'Module 6 — Wisdom',
+    sub: 'Month 3 · Train Your Spirit · Wise Decisions · Long Game',
+    quote: '"The inward witness is just as supernatural as any vision — just not as spectacular." — How to be Led by the Spirit, Ch. 7',
+    tabs: [
+      { label: 'A — What Wisdom Is', content: `
+        <div class="outline-point"><strong>Knowledge</strong> is accumulating information. <strong>Understanding</strong> is interpreting it. <strong>Wisdom</strong> is applying it — knowing what to do, when to speak, when to wait, when to confront, when to let God handle it.</div>
+        <div class="outline-point">True wisdom begins with the fear of the Lord (Prov 9:10) — a deep, reverent recognition that God is God and His ways are higher than ours. The wise worker prays before deciding and holds their opinions loosely.</div>` },
+      { label: 'B — Continuous Learning', content: `
+        <div class="outline-point">A worker who is not growing is falling behind. The Kingdom is advancing, the culture is changing, people\'s needs are evolving (Hos 4:6).</div>
+        <div class="outline-point">Learning requires humility — you must be willing to be wrong, to be corrected, to discover that someone else\'s way is better. Seek feedback actively. Study people who are excelling in your area. Learn from failure without self-condemnation.</div>
+        <div class="outline-point">Four rules for training the human spirit: (1) Meditate the Word daily · (2) Practise and do the Word · (3) Give the Word first place in every decision · (4) Instantly obey the voice of your spirit.</div>` },
+      { label: 'C — WORD Framework', content: `
+        <div class="outline-point"><strong>W</strong> — What does the Word of God say? Scripture is the first filter.</div>
+        <div class="outline-point"><strong>O</strong> — What do Ordained leaders in my life counsel? Seek wisdom from those placed over you.</div>
+        <div class="outline-point"><strong>R</strong> — What does the spirit\'s inner witness say? What is your peace level?</div>
+        <div class="outline-point"><strong>D</strong> — What do the consequences reveal? Wisdom looks ahead — who is affected and how?</div>
+        <div class="outline-point"><strong>Wisdom in relationships:</strong> Be slow to assume negative intent. Be quick to give the benefit of the doubt. Be thoughtful with your words — once spoken, they cannot be unspoken.</div>` },
+      { label: '✦ Discuss', content: `
+        <div class="outline-point">What is the wisest decision you have ever made, and what made it wise? What process did you use?</div>
+        <div class="outline-point">Where in your life or service do you most need God\'s wisdom right now?</div>
+        <div class="outline-point">What is one area of knowledge or skill related to your church role you want to develop in the next six months?</div>` }
+    ]
+  }
+};
+
+let _curMod = 1;
+let _curTab = 0;
+
+function openCurMod(n) {
+  _curMod = n; _curTab = 0;
+  // Update active button
+  document.querySelectorAll('.cur-mod-btn').forEach((b,i) => b.classList.toggle('active', i+1 === n));
+  renderCurPanel(n, 0);
+}
+
+function renderCurPanel(n, tabIdx) {
+  const m = CUR_MODS[n];
+  const panel = document.getElementById('cur-panel');
+
+  const tabsHtml = m.tabs.map((t,i) =>
+    `<button class="cur-tab${i===tabIdx?' active':''}" onclick="switchCurTab(${n},${i})">${t.label}</button>`
+  ).join('');
+
+  const bodyHtml = m.tabs.map((t,i) =>
+    `<div class="cur-tab-body${i===tabIdx?' active':''}">
+      ${t.content}
+    </div>`
+  ).join('');
+
+  panel.innerHTML = `
+    <div class="cur-panel-hd">
+      <div class="cur-panel-title">${m.title}</div>
+      <div class="cur-panel-sub">${m.sub}</div>
+    </div>
+    <div class="cur-tabs">${tabsHtml}</div>
+    <div style="padding:0 20px">${bodyHtml}</div>
+    <div style="padding:14px 20px 20px">
+      <div class="hagin-quote">${m.quote}</div>
+      <button class="btn btn-yellow" style="font-size:12px;padding:8px 16px;margin-top:12px;width:100%" onclick="openMod(${n})">Explore with AI Tutor ✦</button>
+    </div>`;
+}
+
+function switchCurTab(n, tabIdx) {
+  _curTab = tabIdx;
+  renderCurPanel(n, tabIdx);
+}
+
+// Init curriculum panel on first load
+document.addEventListener('DOMContentLoaded', () => {
+  openCurMod(1);
+
 // ── READING JOURNAL ──
 async function submitJournal(key, label) {
   const q1 = document.getElementById('j-' + key + '-q1')?.value.trim();
@@ -1941,13 +1898,6 @@ document.addEventListener('click', e => {
   const modal = document.getElementById('req-modal');
   if (e.target === modal) closeReqModal();
 });
-function toggleMod(n) {
-  const body = document.getElementById('body-' + n);
-  const arr  = document.getElementById('arr-' + n);
-  const open = body.style.display !== 'none';
-  body.style.display = open ? 'none' : 'block';
-  arr.classList.toggle('open', !open);
-}
 
 // ── WEEK DATA ──
 const WEEKS = [
@@ -1996,7 +1946,7 @@ const WEEKS = [
     {d:'Wed',cls:'wed',task:'Read Ch. 26–27 — Visions · Listen to Your Heart',note:"Hagin: be content with the inward witness — it is just as supernatural, just not as spectacular."},
     {d:'Fri',cls:'fri',task:'Module 5 Quiz + Reflection',note:"Where have you been seeking spectacle when God was offering you a quiet witness?"}]},
   {n:12,book:2,title:"Training Your Spirit · Praying in Tongues",sub:"Josh 1:8 · Prov 20:27 · Hagin's 4 rules",days:[
-    {d:'Mon',cls:'mon',task:'Read Ch. 28 — How to Train the Human Spirit',note:"Hagin's 4 rules: Meditate · Practise · Give first place · Instantly obey. Rate yourself 1–10 on each right now."},
+    {d:'Mon',cls:'mon',task:'Read Ch. 28 — How to Train the Human Spirit',note:"Four rules: Meditate · Practise · Give first place · Instantly obey. Rate yourself 1–10 on each right now."},
     {d:'Wed',cls:'wed',task:'Read Ch. 29 — Praying With the Spirit',note:"Hagin: \"Pray in tongues every day — your spirit is in direct contact with the Father of spirits.\" Is this your practice?"},
     {d:'Fri',cls:'fri',task:'Full Programme Consolidation + Module 6 Quiz',note:"Write your 5 most transformative takeaways from both books. Submit your reading reflection to your trainer."}]}
 ];
@@ -2043,7 +1993,6 @@ function toggleWkDay(key, el) {
 }
 
 // ── INIT ──
-document.addEventListener('DOMContentLoaded', () => {
   // Week selector init
   const firstBtn = document.querySelector('.wk-btn');
   if (firstBtn) showWeek(1, firstBtn);
