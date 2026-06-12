@@ -1367,20 +1367,25 @@ REQUIREMENTS: saved · filled with Holy Ghost (tongues) · preach gospel + bring
 Be warm, pastorally wise, practically clear, and biblically rich. Draw from Hagin's specific stories and phrases where relevant. Speak like a wise elder who genuinely cares. Under 200 words unless depth truly requires more.`;
 
 async function callAI(msgs, sysOverride) {
-  const res = await fetch(DB_URL, {
-    method: 'POST',
-    redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({
-      action: 'callAI',
-      messages: msgs,
-      system: sysOverride || SYS
-    })
-  });
-  const text = await res.text();
-  const d = JSON.parse(text);
-  if (!d.ok) throw new Error(d.error || 'AI error');
-  return d.text;
+  try {
+    const res = await fetch(DB_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'callAI',
+        messages: msgs,
+        system: sysOverride || SYS
+      })
+    });
+    const text = await res.text();
+    const d = JSON.parse(text);
+    if (!d.ok) throw new Error(d.error || 'AI error');
+    return d.text;
+  } catch(e) {
+    console.error('callAI error:', e.message);
+    throw e;
+  }
 }
 
 function addBubble(chatId, role, text) {
