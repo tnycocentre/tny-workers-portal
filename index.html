@@ -430,6 +430,43 @@ html, body {
 
 /* ── API KEY MODAL ── */
 
+/* ── CALENDAR ── */
+.cal-week-card { background:var(--white); border:1.5px solid var(--card-border); border-radius:14px; margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow); }
+.cal-week-hd { padding:14px 18px; display:flex; align-items:center; gap:12px; }
+.cal-week-num { font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); font-weight:700; min-width:56px; }
+.cal-week-dates { font-size:14px; font-weight:800; color:var(--cream); flex:1; }
+.cal-week-mod { font-size:11px; color:var(--muted); margin-top:2px; }
+.cal-week-badge { font-size:10px; padding:3px 9px; border-radius:20px; font-weight:700; white-space:nowrap; }
+.cal-sessions { border-top:1px solid var(--border); }
+.cal-session { display:flex; align-items:center; gap:12px; padding:10px 18px; border-bottom:1px solid var(--border); }
+.cal-session:last-child { border-bottom:none; }
+.cal-session-type { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+.type-physical { background:var(--success); }
+.type-virtual { background:var(--blue); }
+.type-special { background:var(--yellow); }
+.cal-session-info { flex:1; }
+.cal-session-info .cs-title { font-size:12.5px; font-weight:600; color:var(--cream); }
+.cal-session-info .cs-time { font-size:11px; color:var(--muted); }
+.cal-session-date { font-size:12px; font-weight:700; color:var(--cream); text-align:right; white-space:nowrap; }
+.cal-current { border-color:var(--yellow) !important; border-width:2px !important; }
+.cal-current .cal-week-hd { background:var(--yellow-lt); }
+
+/* Monthly grid */
+.cal-grid-hd { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px; }
+.cal-grid-hd div { font-size:10px; font-weight:700; text-align:center; color:var(--muted); padding:6px 0; text-transform:uppercase; letter-spacing:1px; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cal-day { min-height:52px; background:var(--white); border:1px solid var(--border); border-radius:8px; padding:6px; cursor:pointer; transition:all 0.15s; }
+.cal-day:hover { border-color:var(--yellow); }
+.cal-day.other-month { background:rgba(0,0,0,0.02); opacity:0.5; }
+.cal-day.today { border-color:var(--yellow); border-width:2px; }
+.cal-day.has-event { background:var(--yellow-lt); }
+.cal-day .day-num { font-size:12px; font-weight:700; color:var(--cream); margin-bottom:3px; }
+.cal-day.today .day-num { color:var(--yellow-dk); }
+.cal-event-dot { font-size:9px; font-weight:700; padding:1px 5px; border-radius:4px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dot-physical { background:#E8F5EE; color:var(--success); }
+.dot-virtual { background:var(--blue-lt); color:var(--blue); }
+.dot-special { background:var(--yellow-lt); color:var(--yellow-dk); }
+
 /* ── READING JOURNAL ── */
 .journal-ta {
   width:100%; background:var(--deep); border:1.5px solid var(--border);
@@ -616,7 +653,8 @@ html, body {
     <button class="nav-item" onclick="nav('quiz',3,this)"><span class="icon">◇</span> Quiz</button>
 
     <div class="nav-section" style="margin-top:10px">Spiritual</div>
-    <button class="nav-item" onclick="nav('prayer',4,this)"><span class="icon">◉</span> Prayer Log</button>
+    <button class="nav-item" onclick="nav('prayer',4,this)"><span class="icon">◉</span> Attendance &amp; Fellowship</button>
+    <button class="nav-item" onclick="nav('calendar',5,this)"><span class="icon">◫</span> Calendar</button>
   </div>
   <div class="sidebar-footer">
     <div class="trainee-pill">
@@ -679,6 +717,42 @@ html, body {
       </div>
 
       <div class="two-col">
+        <!-- QUICK ATTENDANCE LOG -->
+        <div class="card" style="margin-bottom:16px;border:2px solid var(--yellow);grid-column:1/-1">
+          <div class="card-title">📍 Log My Attendance <span style="font-size:11px;font-weight:500;color:var(--muted)">— counts immediately, trainer confirms after service</span></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+            <div style="flex:1;min-width:140px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Session</div>
+              <select id="dash-att-type" class="form-sel" style="width:100%">
+                <option value="">— Select —</option>
+                <optgroup label="Services">
+                  <option value="Sunday Service">Sunday Service</option>
+                  <option value="Tuesday Service">Tuesday Service</option>
+                  <option value="Friday Immerse">Friday Immerse</option>
+                </optgroup>
+                <optgroup label="Prayer">
+                  <option value="Morning Prayer">Morning Prayer</option>
+                  <option value="Night Prayer">Night Prayer</option>
+                </optgroup>
+                <optgroup label="Training">
+                  <option value="Physical Class">Physical Class (Sunday)</option>
+                  <option value="Virtual Class">Virtual Class (Wednesday)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div style="min-width:100px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Arrival Time</div>
+              <input type="time" id="dash-att-time" class="form-sel" style="width:100%;cursor:pointer">
+            </div>
+            <div style="min-width:130px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Date</div>
+              <input type="date" id="dash-att-date" class="form-sel" style="width:100%;cursor:pointer">
+            </div>
+            <button class="btn btn-yellow" style="white-space:nowrap;padding:10px 20px" onclick="dashLogAttendance()">Log ✓</button>
+          </div>
+          <div id="dash-att-recent" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+
         <div class="card">
           <div class="card-title">Onboarding Requirements <span class="ct-sub" id="home-req-count">0 of 9 met</span></div>
 
@@ -743,13 +817,13 @@ html, body {
             <div class="card-title">Spiritual Streak</div>
             <div style="display:flex;align-items:center;gap:16px">
               <div style="text-align:center">
-                <div class="streak-num">12</div>
+                <div class="streak-num" id="streak-num">—</div>
                 <div style="font-size:11px;color:var(--muted);margin-top:2px">Day streak</div>
               </div>
               <div style="flex:1;font-size:12px;color:var(--muted);line-height:1.9">
-                Daily fellowship: <strong style="color:var(--cream)">4/7 days</strong><br>
-                Morning prayers: <strong style="color:var(--cream)">5/7</strong><br>
-                Night prayers: <strong style="color:var(--cream)">4/7</strong>
+                Daily fellowship: <strong style="color:var(--cream)" id="streak-fellowship">—</strong><br>
+                Morning prayers: <strong style="color:var(--cream)" id="streak-morning">—</strong><br>
+                Night prayers: <strong style="color:var(--cream)" id="streak-night">—</strong>
               </div>
             </div>
           </div>
@@ -1075,7 +1149,40 @@ html, body {
       </div>
     </div>
 
-            <!-- ── QUIZ ── -->
+            <!-- ── CALENDAR ── -->
+    <div class="page" id="p-calendar">
+      <div class="ph"><h2>Programme Calendar</h2><p>All sessions, weeks, and key dates for Cohort 1.</p></div>
+
+      <!-- View toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:18px">
+        <button class="btn btn-yellow" id="cal-btn-programme" onclick="showCalView('programme',this)" style="font-size:12px;padding:8px 16px">Programme View</button>
+        <button class="btn btn-outline" id="cal-btn-monthly" onclick="showCalView('monthly',this)" style="font-size:12px;padding:8px 16px">Monthly View</button>
+      </div>
+
+      <!-- Programme view -->
+      <div id="cal-programme">
+        <div id="cal-programme-content"></div>
+      </div>
+
+      <!-- Monthly view -->
+      <div id="cal-monthly" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <button class="btn btn-outline" style="font-size:12px;padding:7px 14px" onclick="changeMonth(-1)">← Prev</button>
+          <div id="cal-month-label" style="font-size:15px;font-weight:800;color:var(--cream)"></div>
+          <button class="btn btn-outline" style="font-size:12px;padding:7px 14px" onclick="changeMonth(1)">Next →</button>
+        </div>
+        <div class="cal-grid-hd">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div id="cal-grid" class="cal-grid"></div>
+        <div id="cal-event-detail" style="display:none;margin-top:14px;padding:14px 16px;background:var(--white);border:1.5px solid var(--yellow);border-radius:12px">
+          <div id="cal-event-title" style="font-size:14px;font-weight:700;color:var(--cream);margin-bottom:4px"></div>
+          <div id="cal-event-sub" style="font-size:12px;color:var(--muted)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── QUIZ ── -->
     <div class="page" id="p-quiz">
       <div class="ph"><h2>Module Quiz</h2><p>AI-generated questions tailored to each module.</p></div>
       <div class="two-col">
@@ -1117,59 +1224,75 @@ html, body {
 
     <!-- ── PRAYER ── -->
     <div class="page" id="p-prayer">
-      <div class="ph"><h2>Prayer &amp; Fellowship Log</h2><p>Track your daily 30-minute and weekly 1-hour fellowship targets.</p></div>
-      <div class="three-col" style="margin-bottom:20px">
-        <div class="stat-card">
-          <div class="sc-label">This Week</div>
-          <div class="sc-val">4<span>/7</span></div>
-          <div class="sc-sub">Daily sessions logged</div>
-          <div class="pbar"><div class="pbar-fill fy" style="width:57%"></div></div>
+      <div class="ph"><h2>Attendance &amp; Fellowship</h2><p>Log your attendance and track your daily personal fellowship.</p></div>
+
+      <!-- Attendance self-log with time -->
+      <div class="card" style="margin-bottom:16px;border:2px solid var(--yellow)">
+        <div class="card-title">📍 Log My Attendance</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.55">Select the session, enter the date and your arrival time. Counts immediately — trainer confirms after service.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Session Type</div>
+            <select id="att-type" class="form-sel">
+              <option value="">— Select session —</option>
+              <optgroup label="Services">
+                <option value="Sunday Service">Sunday Service</option>
+                <option value="Tuesday Service">Tuesday Service</option>
+                <option value="Friday Immerse">Friday Immerse</option>
+              </optgroup>
+              <optgroup label="Prayer">
+                <option value="Morning Prayer">Morning Prayer</option>
+                <option value="Night Prayer">Night Prayer</option>
+              </optgroup>
+              <optgroup label="Training">
+                <option value="Physical Class">Physical Class (Sunday)</option>
+                <option value="Virtual Class">Virtual Class (Wednesday)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="flex:1;min-width:120px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Date</div>
+              <input type="date" id="att-date" class="form-sel" style="cursor:pointer;width:100%">
+            </div>
+            <div style="flex:1;min-width:120px">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Arrival Time</div>
+              <input type="time" id="att-time" class="form-sel" style="cursor:pointer;width:100%">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Note (optional)</div>
+            <input type="text" id="att-note" class="form-sel" placeholder="e.g. Arrived at gate on time">
+          </div>
+          <button class="btn btn-yellow" style="width:100%" onclick="selfLogAttendance()">Log Attendance ✓</button>
         </div>
-        <div class="stat-card">
-          <div class="sc-label">Prayer Times</div>
-          <div class="sc-val">58<span>%</span></div>
-          <div class="sc-sub">Morning + night · Target 70%</div>
-          <div class="pbar"><div class="pbar-fill fw" style="width:58%"></div></div>
-        </div>
-        <div class="stat-card">
-          <div class="sc-label">Extended Fellowship</div>
-          <div class="sc-val">2<span>/4</span></div>
-          <div class="sc-sub">1-hour sessions this month</div>
-          <div class="pbar"><div class="pbar-fill fp" style="width:50%"></div></div>
-        </div>
+        <div id="att-log-list" style="margin-top:14px;display:flex;flex-direction:column;gap:0"></div>
       </div>
-      <div class="two-col">
-        <div class="card">
-          <div class="card-title">This Week</div>
-          <div class="prayer-grid">
-            <div class="pg-lbl">M</div><div class="pg-lbl">T</div><div class="pg-lbl">W</div>
-            <div class="pg-lbl">T</div><div class="pg-lbl">F</div><div class="pg-lbl">S</div><div class="pg-lbl">S</div>
-            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
-            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
-            <div class="pg-dot" onclick="togglePrayer(this)"></div>
-            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
-            <div class="pg-dot logged" onclick="togglePrayer(this)">✓</div>
-            <div class="pg-dot" onclick="togglePrayer(this)"></div>
-            <div class="pg-dot rest">Rest</div>
-          </div>
-          <button class="btn btn-yellow" style="margin-top:18px;width:100%" onclick="logTodayPrayer()">Log This Week's Fellowship</button>
+
+      <!-- Fellowship weekly grid -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">This Week's Fellowship <span class="ct-sub" id="fellowship-week-label"></span></div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.55">Tap each day you spent at least 30 minutes in personal fellowship with God. Sunday is a rest day — your church time counts separately.</p>
+        <div class="prayer-grid">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">MON</div><div class="pg-dot" id="pgd-0" onclick="togglePrayer(this,0)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">TUE</div><div class="pg-dot" id="pgd-1" onclick="togglePrayer(this,1)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">WED</div><div class="pg-dot" id="pgd-2" onclick="togglePrayer(this,2)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">THU</div><div class="pg-dot" id="pgd-3" onclick="togglePrayer(this,3)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">FRI</div><div class="pg-dot" id="pgd-4" onclick="togglePrayer(this,4)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">SAT</div><div class="pg-dot" id="pgd-5" onclick="togglePrayer(this,5)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">SUN</div><div class="pg-dot rest">Rest</div></div>
         </div>
-        <div class="card">
-          <div class="card-title">Prayer Companion ✦</div>
-          <div class="chips">
-            <div class="chip" onclick="askPrayer('Give me a practical morning prayer schedule I can follow this week.')">Morning schedule</div>
-            <div class="chip" onclick="askPrayer('Give me a devotional prompt based on Kingdom Agenda for today.')">Today\'s devotional</div>
-            <div class="chip" onclick="askPrayer('How can I stay consistent in prayer when I feel spiritually dry or tired?')">Stay consistent</div>
-            <div class="chip" onclick="askPrayer('What scriptures can anchor my personal fellowship time as a church worker?')">Scripture anchors</div>
-          </div>
-          <div class="chat-box" id="prayer-chat" style="min-height:140px;max-height:220px">
-            <div class="bubble ai"><span class="ai-tag">AI Guide</span>Consistency in prayer is one of the most powerful habits you will build during training. You are at 58% for prayer times this month — ask me for a schedule, a devotional prompt, or some encouragement.</div>
-          </div>
-          <div class="chat-row">
-            <input class="chat-inp" id="prayer-inp" placeholder="Ask for prayer tips or devotionals…" onkeydown="if(event.key==='Enter')askPrayer()">
-            <button class="btn btn-yellow" onclick="askPrayer()">Ask</button>
-          </div>
+        <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:13px;color:var(--muted)">Days logged this week: <strong id="fellowship-count" style="color:var(--cream)">0</strong> / 6</div>
+          <div id="fellowship-bar-wrap" style="flex:1;margin:0 12px"><div class="pbar"><div class="pbar-fill fy" id="fellowship-bar" style="width:0%"></div></div></div>
         </div>
+        <button class="btn btn-yellow" style="margin-top:14px;width:100%" onclick="logWeeklyFellowship()">Log This Week's Fellowship Reflection →</button>
+      </div>
+
+      <!-- Attendance history -->
+      <div class="card">
+        <div class="card-title">My Attendance Log <span class="ct-sub" id="att-count"></span></div>
+        <div id="att-history"><div style="color:var(--muted);font-size:13px;padding:8px 0">No sessions logged yet.</div></div>
       </div>
     </div>
 
@@ -1184,7 +1307,8 @@ html, body {
     <button class="bnav-btn" id="bn-1" onclick="nav('curriculum',1,null)"><span class="bi">❋</span><span class="bl">Modules</span></button>
     <button class="bnav-btn" id="bn-2" onclick="nav('tutor',2,null)"><span class="bi">✦</span><span class="bl">Tutor</span></button>
     <button class="bnav-btn" id="bn-3" onclick="nav('quiz',3,null)"><span class="bi">◇</span><span class="bl">Quiz</span></button>
-    <button class="bnav-btn" id="bn-4" onclick="nav('prayer',4,null)"><span class="bi">◉</span><span class="bl">Prayer</span></button>
+    <button class="bnav-btn" id="bn-4" onclick="nav('prayer',4,null)"><span class="bi">◉</span><span class="bl">Attend</span></button>
+    <button class="bnav-btn" id="bn-5" onclick="nav('calendar',5,null)"><span class="bi">◫</span><span class="bl">Calendar</span></button>
   </div>
 </nav>
 
@@ -1193,7 +1317,8 @@ html, body {
 // ── NAVIGATION ──
 const pageTitles = {
   home:'My Dashboard', requirements:'Requirements', curriculum:'Curriculum',
-  tutor:'AI Tutor', reading:'Reading Plan', quiz:'Quiz', prayer:'Prayer Log'
+  tutor:'AI Tutor', reading:'Reading Plan', quiz:'Quiz',
+  prayer:'Attendance & Fellowship', calendar:'Programme Calendar'
 };
 
 function nav(page, bnIdx, sidebarEl) {
@@ -1651,14 +1776,76 @@ function toggleDone(el) {
   if (el.textContent === '○') { el.textContent = '✓'; el.style.color = 'var(--success)'; }
   else { el.textContent = '○'; el.style.color = ''; }
 }
-function logTodayPrayer() {
-  tickReq('fellowship');
+// ── FELLOWSHIP GRID — WEEK-AWARE ──
+// Key: fellowship_wk{N} stored in localStorage per trainee per week
+let _fellowshipState = [false,false,false,false,false,false]; // Mon-Sat
+
+function getFellowshipKey() {
+  const wk = getTrainingWeek();
+  const id = _trainee ? _trainee.id : 'guest';
+  return `fellowship_${id}_wk${wk}`;
 }
 
-function togglePrayer(el) {
-  el.classList.toggle('logged');
-  el.textContent = el.classList.contains('logged') ? '✓' : '';
+function loadFellowshipGrid() {
+  const key = getFellowshipKey();
+  const saved = localStorage.getItem(key);
+  _fellowshipState = saved ? JSON.parse(saved) : [false,false,false,false,false,false];
+  for (let i = 0; i < 6; i++) {
+    const dot = document.getElementById('pgd-' + i);
+    if (!dot) continue;
+    if (_fellowshipState[i]) {
+      dot.classList.add('logged');
+      dot.textContent = '✓';
+    } else {
+      dot.classList.remove('logged');
+      dot.textContent = '';
+    }
+  }
+  updateStreakCard();
 }
+
+function togglePrayer(el, idx) {
+  _fellowshipState[idx] = !_fellowshipState[idx];
+  if (_fellowshipState[idx]) {
+    el.classList.add('logged');
+    el.textContent = '✓';
+  } else {
+    el.classList.remove('logged');
+    el.textContent = '';
+  }
+  localStorage.setItem(getFellowshipKey(), JSON.stringify(_fellowshipState));
+  updateStreakCard();
+}
+
+function updateStreakCard() {
+  const count = _fellowshipState.filter(Boolean).length;
+  const el = document.getElementById('streak-num');
+  const sf = document.getElementById('streak-fellowship');
+  if (el) el.textContent = count;
+  if (sf) sf.textContent = count + '/6 days';
+  // Morning/night prayers pulled from attendance log count
+  const wk = getTrainingWeek();
+  const morning = _attLog.filter(a => a.type === 'Morning Prayer').length;
+  const night   = _attLog.filter(a => a.type === 'Night Prayer').length;
+  const sm = document.getElementById('streak-morning');
+  const sn = document.getElementById('streak-night');
+  if (sm) sm.textContent = morning + ' this week';
+  if (sn) sn.textContent = night + ' this week';
+}
+
+function logTodayPrayer() {
+  const count = _fellowshipState.filter(Boolean).length;
+  if (count === 0) { showToast('Tap the days you had fellowship first.'); return; }
+  showToast(`Fellowship logged — ${count}/6 days this week ✓`);
+  if (_trainee && !_trainee.offline) {
+    dbPost({
+      action:'logPrayer', traineeId:_trainee.id, traineeName:_trainee.name,
+      date:new Date().toISOString().split('T')[0],
+      sessionType:'Personal Fellowship', duration: count * 30
+    }).catch(()=>{});
+  }
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -1667,7 +1854,7 @@ function showToast(msg) {
 
 // ── TRAINING WEEK CALCULATOR ──
 // Set this to the Monday the training programme starts
-const TRAINING_START = new Date('2026-07-07'); // ← UPDATE THIS DATE before launch
+const TRAINING_START = new Date('2026-07-05'); // Orientation Sunday 5 Jul; Week 1 starts 12 Jul
 
 const MODULE_SCHEDULE = [
   { mod:1, name:'Understanding Your Spirituality', sub:'Man is a Spirit · Tongues · Gifts & Fruits',       weeks:[1,2,3,4] },
@@ -1736,13 +1923,14 @@ function updateModuleStatuses() {
     }
   });
 
-  // Update This Week's Focus card
+  // Update This Week's Focus card with dates
   const wfMod     = document.getElementById('wf-module');
   const wfWeek    = document.getElementById('wf-week');
   const wfReading = document.getElementById('wf-reading');
   const wfProg    = document.getElementById('wf-progress');
+  const wd = WEEK_DATES[week];
   if (wfMod)     wfMod.textContent     = curMod.name;
-  if (wfWeek)    wfWeek.textContent    = `Week ${week} of 12`;
+  if (wfWeek)    wfWeek.textContent    = wd ? `${wd.label} · ${wd.range}` : `Week ${week} of 12`;
   if (wfReading) wfReading.textContent = READING_SCHEDULE[week-1] || '—';
   if (wfProg)    wfProg.textContent    = `${Math.round(week/12*100)}% through programme`;
 
@@ -1963,6 +2151,14 @@ document.addEventListener('DOMContentLoaded', () => {
   openCurMod(1);
   updateModuleStatuses();
   document.getElementById('req-modal-overlay').addEventListener('click', closeReqModal);
+  buildProgrammeCalendar();
+  renderMonthlyCalendar(_calYear, _calMonth);
+  loadFellowshipGrid();
+  // Set default date on attendance form to today
+  const attDate = document.getElementById('att-date');
+  if (attDate) attDate.valueAsDate = new Date();
+  const dashAttDate = document.getElementById('dash-att-date');
+  if (dashAttDate) dashAttDate.valueAsDate = new Date();
 
   // Week selector init
   const firstBtn = document.querySelector('.wk-btn');
@@ -1999,6 +2195,289 @@ async function submitJournal(key, label) {
     try {
       await dbPost({ action:'saveJournal', traineeId:_trainee.id, traineeName:_trainee.name, journalKey:key, label, q1, q2, q3 });
     } catch(e) {}
+  }
+}
+
+// ── PROGRAMME EVENTS ──
+const PROGRAMME_EVENTS = [
+  { date:'2026-07-05', type:'special',  title:'Orientation', sub:'Welcome & Programme Overview · 9:00–11:00am · Church', week:0 },
+  { date:'2026-07-12', type:'physical', title:'Module 1 A&B', sub:'Physical Class · 9:00–11:00am · Church', week:1 },
+  { date:'2026-07-15', type:'virtual',  title:'Module 1 C&D', sub:'Virtual Class · 8:00–10:00pm', week:1 },
+  { date:'2026-07-19', type:'physical', title:'Module 2 A&B', sub:'Physical Class · 9:00–11:00am · Church', week:2 },
+  { date:'2026-07-22', type:'virtual',  title:'Module 2 C&D', sub:'Virtual Class · 8:00–10:00pm', week:2 },
+  { date:'2026-07-26', type:'physical', title:'Module 3 A&B', sub:'Physical Class · 9:00–11:00am · Church', week:3 },
+  { date:'2026-07-29', type:'virtual',  title:'Module 3 C', sub:'Virtual Class · 8:00–10:00pm', week:3 },
+  { date:'2026-08-02', type:'physical', title:'Module 4 A&B', sub:'Physical Class · 9:00–11:00am · Church', week:4 },
+  { date:'2026-08-05', type:'virtual',  title:'Module 4 B&C', sub:'Virtual Class · 8:00–10:00pm', week:4 },
+  { date:'2026-08-09', type:'physical', title:'Module 5 A&B', sub:'Physical Class · 9:00–11:00am · Church', week:5 },
+  { date:'2026-08-12', type:'virtual',  title:'Module 5 C', sub:'Virtual Class · 8:00–10:00pm', week:5 },
+  { date:'2026-08-16', type:'physical', title:'Module 6 A&B', sub:'Physical Class · 9:00–11:00am · Church', week:6 },
+  { date:'2026-08-19', type:'virtual',  title:'Module 6 C', sub:'Virtual Class · 8:00–10:00pm', week:6 },
+  { date:'2026-08-23', type:'special',  title:'⭐ Midway Review', sub:'Physical · 9:00–11:00am · Church', week:7 },
+  { date:'2026-08-26', type:'virtual',  title:'Open Q&A', sub:'Virtual Class · 8:00–10:00pm', week:7 },
+  { date:'2026-08-30', type:'physical', title:'Deep Dive Mod 1&2', sub:'Physical Class · 9:00–11:00am · Church', week:8 },
+  { date:'2026-09-02', type:'virtual',  title:'Deep Dive Mod 3&4', sub:'Virtual Class · 8:00–10:00pm', week:8 },
+  { date:'2026-09-06', type:'physical', title:'Deep Dive Mod 5&6', sub:'Physical Class · 9:00–11:00am · Church', week:9 },
+  { date:'2026-09-09', type:'virtual',  title:'Reading Consolidation', sub:'Virtual Class · 8:00–10:00pm', week:9 },
+  { date:'2026-09-13', type:'physical', title:'Service Team Orientation', sub:'Physical Class · 9:00–11:00am · Church', week:10 },
+  { date:'2026-09-16', type:'virtual',  title:'Final Requirements Check', sub:'Virtual Class · 8:00–10:00pm', week:10 },
+  { date:'2026-09-20', type:'physical', title:'What Has God Been Saying?', sub:'Physical Class · 9:00–11:00am · Church', week:11 },
+  { date:'2026-09-23', type:'virtual',  title:'Final Submissions', sub:'Virtual Class · 8:00–10:00pm', week:11 },
+  { date:'2026-09-27', type:'special',  title:'✦ Completion & Commissioning', sub:'Physical · 9:00–11:00am · Church', week:12 },
+];
+
+const WEEK_DATES = {
+  0:  { label:'Week 0',  range:'5 Jul',           dates:'Sun 5 Jul — Orientation' },
+  1:  { label:'Week 1',  range:'12–15 Jul',          dates:'Sun 12 – Wed 15 Jul' },
+  2:  { label:'Week 2',  range:'19–22 Jul',          dates:'Sun 19 – Wed 22 Jul' },
+  3:  { label:'Week 3',  range:'26–29 Jul',     dates:'Sun 26 – Wed 29 Jul' },
+  4:  { label:'Week 4',  range:'2–5 Aug',            dates:'Sun 2 – Wed 5 Aug' },
+  5:  { label:'Week 5',  range:'9–12 Aug',           dates:'Sun 9 – Wed 12 Aug' },
+  6:  { label:'Week 6',  range:'16–19 Aug',          dates:'Sun 16 – Wed 19 Aug' },
+  7:  { label:'Week 7',  range:'23–26 Aug',          dates:'Sun 23 – Wed 26 Aug' },
+  8:  { label:'Week 8',  range:'30 Aug – 2 Sep',     dates:'Sun 30 Aug – Wed 2 Sep' },
+  9:  { label:'Week 9',  range:'6–9 Sep',           dates:'Sun 6 – Wed 9 Sep' },
+  10: { label:'Week 10', range:'13–16 Sep',          dates:'Sun 13 – Wed 16 Sep' },
+  11: { label:'Week 11', range:'20–23 Sep',          dates:'Sun 20 – Wed 23 Sep' },
+  12: { label:'Week 12', range:'27 Sep',     dates:'Sun 27 Sep' },
+};
+
+// ── CALENDAR ──
+let _calMonth = new Date().getMonth();
+let _calYear  = new Date().getFullYear();
+
+function showCalView(view, btn) {
+  document.getElementById('cal-programme').style.display = view==='programme'?'block':'none';
+  document.getElementById('cal-monthly').style.display   = view==='monthly'?'block':'none';
+  document.getElementById('cal-btn-programme').className = view==='programme'?'btn btn-yellow':'btn btn-outline';
+  document.getElementById('cal-btn-monthly').className   = view==='monthly'?'btn btn-yellow':'btn btn-outline';
+  if (view==='monthly') renderMonthlyCalendar(_calYear, _calMonth);
+}
+
+function buildProgrammeCalendar() {
+  const curWeek = getTrainingWeek();
+  const byWeek = {};
+  PROGRAMME_EVENTS.forEach(e => { if(!byWeek[e.week]) byWeek[e.week]=[]; byWeek[e.week].push(e); });
+  const weekMods = {0:'Orientation',1:'Module 1',2:'Module 2',3:'Module 3',4:'Module 4',5:'Module 5',6:'Module 6',7:'Midway Review',8:'Deep Dives',9:'Deep Dives + Reading',10:'Service Teams',11:'Wind Down',12:'✦ Completion'};
+  let html = '';
+  Object.keys(byWeek).sort((a,b)=>+a-+b).forEach(wk => {
+    const w = parseInt(wk);
+    const isCur = w===curWeek, isPast = w<curWeek;
+    const wd = WEEK_DATES[w];
+    const badgeStyle = isCur?'background:var(--yellow);color:var(--deep)':isPast?'background:#E8F5EE;color:var(--success)':'background:var(--deep);color:var(--muted)';
+    const badgeTxt = isCur?'Current Week':isPast?'Completed':'Upcoming';
+    html += `<div class="cal-week-card${isCur?' cal-current':''}">
+      <div class="cal-week-hd">
+        <div class="cal-week-num">${w===0?'Orientation':'Week '+w}</div>
+        <div style="flex:1"><div class="cal-week-dates">${wd?wd.dates:''}</div><div class="cal-week-mod">${weekMods[w]||''}</div></div>
+        <div class="cal-week-badge" style="${badgeStyle}">${badgeTxt}</div>
+      </div>
+      <div class="cal-sessions">`;
+    byWeek[wk].forEach(e => {
+      const d = new Date(e.date);
+      const dayLabel = d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+      const dotCls = e.type==='physical'?'type-physical':e.type==='virtual'?'type-virtual':'type-special';
+      html += `<div class="cal-session">
+        <div class="cal-session-type ${dotCls}"></div>
+        <div class="cal-session-info"><div class="cs-title">${e.title}</div><div class="cs-time">${e.sub}</div></div>
+        <div class="cal-session-date">${dayLabel}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  const cont = document.getElementById('cal-programme-content');
+  if (cont) cont.innerHTML = html;
+}
+
+function renderMonthlyCalendar(year, month) {
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = months[month]+' '+year;
+  const firstDay = new Date(year,month,1).getDay();
+  const daysInMonth = new Date(year,month+1,0).getDate();
+  const today = new Date();
+  const eventMap = {};
+  PROGRAMME_EVENTS.forEach(e=>{ if(!eventMap[e.date]) eventMap[e.date]=[]; eventMap[e.date].push(e); });
+  let html = '';
+  for(let i=0;i<firstDay;i++) html+='<div class="cal-day other-month"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+    const evs=eventMap[ds]||[];
+    html+=`<div class="cal-day${isToday?' today':''}${evs.length?' has-event':''}" onclick="showDayDetail('${ds}')">
+      <div class="day-num">${d}</div>`;
+    evs.forEach(e=>{
+      const cls=e.type==='physical'?'dot-physical':e.type==='virtual'?'dot-virtual':'dot-special';
+      const short=e.title.length>10?e.title.substring(0,10)+'…':e.title;
+      html+=`<div class="cal-event-dot ${cls}">${short}</div>`;
+    });
+    html+='</div>';
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+  document.getElementById('cal-event-detail').style.display='none';
+}
+
+function showDayDetail(ds) {
+  const evs=PROGRAMME_EVENTS.filter(e=>e.date===ds);
+  const det=document.getElementById('cal-event-detail');
+  if(!evs.length){det.style.display='none';return;}
+  document.getElementById('cal-event-title').textContent=evs.map(e=>e.title).join(' · ');
+  document.getElementById('cal-event-sub').textContent=evs.map(e=>e.sub).join(' | ');
+  det.style.display='block';
+}
+
+function changeMonth(dir){
+  _calMonth+=dir;
+  if(_calMonth>11){_calMonth=0;_calYear++;}
+  if(_calMonth<0){_calMonth=11;_calYear--;}
+  renderMonthlyCalendar(_calYear,_calMonth);
+}
+
+// ── ATTENDANCE SELF-LOG ──
+let _attLog = [];
+
+async function selfLogAttendance() {
+  const type = document.getElementById('att-type').value;
+  const date = document.getElementById('att-date').value;
+  const note = document.getElementById('att-note')?.value.trim() || '';
+  if (!type || !date) { showToast('Please select a session type and date.'); return; }
+
+  _attLog.unshift({ type, date, note, pending:true });
+  renderAttLog();
+  showToast(`${type} logged ✓ — pending trainer confirmation`);
+
+  if (_trainee && !_trainee.offline) {
+    try {
+      await dbPost({
+        action:'logAttendance', traineeId:_trainee.id, traineeName:_trainee.name,
+        sessionType:type, date, status:'present',
+        notes:(note||'')+'[self-reported]', loggedBy:_trainee.name
+      });
+    } catch(e) {}
+  }
+  document.getElementById('att-type').value='';
+  document.getElementById('att-note').value='';
+}
+
+function renderAttLog() {
+  const el = document.getElementById('att-log-list');
+  if (!el || !_attLog.length) return;
+  el.innerHTML = _attLog.slice(0,5).map(e=>{
+    const d = new Date(e.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${e.pending?'var(--yellow-lt)':'#E8F5EE'};color:${e.pending?'var(--yellow-dk)':'var(--success)'}">${e.pending?'Pending':'✓ Confirmed'}</div>
+      <div style="flex:1;font-size:13px;color:var(--cream)">${e.type}</div>
+      <div style="font-size:12px;color:var(--muted)">${d}</div>
+    </div>`;
+  }).join('');
+}
+
+async function dashLogAttendance() {
+  const type = document.getElementById('dash-att-type').value;
+  const date = document.getElementById('dash-att-date').value;
+  const time = document.getElementById('dash-att-time').value;
+  if (!type || !date) { showToast('Please select a session and date.'); return; }
+  if (!time) { showToast('Please enter your arrival time.'); return; }
+
+  // Determine punctuality based on session start times
+  const sessionStarts = {
+    'Sunday Service': '11:30', 'Physical Class': '09:00',
+    'Tuesday Service': '18:00', 'Friday Immerse': '18:00',
+    'Morning Prayer': '06:00', 'Night Prayer': '21:00',
+    'Virtual Class': '20:00'
+  };
+  const start = sessionStarts[type];
+  let punctuality = 'on-time';
+  if (start && time > start) punctuality = 'late';
+  const noteStr = `Arrived: ${time}${punctuality === 'late' ? ' (late)' : ''} [self-reported]`;
+
+  // Add chip to dashboard
+  const recent = document.getElementById('dash-att-recent');
+  if (recent) {
+    const d = new Date(date).toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+    const chip = document.createElement('div');
+    chip.style.cssText = 'font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--yellow-lt);color:var(--yellow-dk);border:1px solid rgba(245,200,0,0.4)';
+    chip.textContent = `${type} · ${d} · ${time} · Pending`;
+    recent.appendChild(chip);
+  }
+
+  showToast(`${type} logged ✓ (arrived ${time}) — pending trainer confirmation`);
+  _attLog.unshift({ type, date, note:noteStr, pending:true });
+  renderAttLog();
+
+  if (_trainee && !_trainee.offline) {
+    try {
+      await dbPost({
+        action:'logAttendance', traineeId:_trainee.id, traineeName:_trainee.name,
+        sessionType:type, date, status: punctuality === 'late' ? 'late' : 'present',
+        notes: noteStr, loggedBy:_trainee.name
+      });
+    } catch(e) {}
+  }
+  document.getElementById('dash-att-type').value = '';
+  document.getElementById('dash-att-time').value = '';
+}
+
+// ── FELLOWSHIP — WEEK-AWARE ──
+function getFellowshipKey() {
+  const week = getTrainingWeek();
+  return `fellowship_w${week}_${_trainee ? _trainee.id : 'guest'}`;
+}
+
+function loadFellowshipGrid() {
+  const week = getTrainingWeek();
+  const wd = WEEK_DATES[week];
+  const label = document.getElementById('fellowship-week-label');
+  if (label) label.textContent = wd ? `· ${wd.range}` : `· Week ${week}`;
+
+  const key = getFellowshipKey();
+  let ticks = [];
+  try { ticks = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+
+  // Reset all dots first
+  for (let i = 0; i < 6; i++) {
+    const dot = document.getElementById('pgd-' + i);
+    if (!dot) continue;
+    dot.classList.toggle('logged', ticks.includes(i));
+  }
+  updateFellowshipCount(ticks);
+}
+
+function togglePrayer(el, idx) {
+  const key = getFellowshipKey();
+  let ticks = [];
+  try { ticks = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+  if (ticks.includes(idx)) {
+    ticks = ticks.filter(i => i !== idx);
+    el.classList.remove('logged');
+  } else {
+    ticks.push(idx);
+    el.classList.add('logged');
+  }
+  localStorage.setItem(key, JSON.stringify(ticks));
+  updateFellowshipCount(ticks);
+}
+
+function updateFellowshipCount(ticks) {
+  const count = document.getElementById('fellowship-count');
+  const bar   = document.getElementById('fellowship-bar');
+  const n = ticks.length;
+  if (count) count.textContent = n;
+  if (bar)   bar.style.width = Math.round(n / 6 * 100) + '%';
+  // Also update streak card on home
+  const sf = document.getElementById('streak-fellowship');
+  if (sf) sf.textContent = n + '/6 days';
+}
+
+function logWeeklyFellowship() {
+  const key = getFellowshipKey();
+  let ticks = [];
+  try { ticks = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+  if (!ticks.length) { showToast('Tap the days you fellowshipped first.'); return; }
+  showToast(`${ticks.length} days of fellowship logged for this week ✓`);
+  if (_trainee && !_trainee.offline) {
+    dbPost({ action:'logPrayer', traineeId:_trainee.id, traineeName:_trainee.name,
+      week: getTrainingWeek(), daysLogged: ticks.length, date: new Date().toISOString().split('T')[0] })
+    .catch(()=>{});
   }
 }
 
@@ -2140,8 +2619,10 @@ function showWeek(n, btn) {
   const b2 = w.book === 2;
   const accentCol = b2 ? 'var(--pink)' : 'var(--yellow)';
   const bookLbl = b2 ? '📗 Book 2' : '📘 Book 1';
+  const wd = WEEK_DATES[n];
+  const dateRange = wd ? ` · ${wd.range}` : '';
   let html = `<div class="week-card">
-    <div class="wc-num">${bookLbl} · <span style="color:${accentCol}">Week ${w.n} of 12</span></div>
+    <div class="wc-num">${bookLbl} · <span style="color:${accentCol}">Week ${w.n} of 12${dateRange}</span></div>
     <div class="wc-title">${w.title}</div>
     <div class="wc-sub">${w.sub}</div>`;
   w.days.forEach((d,i) => {
@@ -2176,4 +2657,66 @@ function toggleWkDay(key, el) {
 </script>
 </body>
 </html>
+    <!-- ── PRAYER & FELLOWSHIP ── -->
+    <div class="page" id="p-prayer">
+      <div class="ph"><h2>Attendance &amp; Fellowship</h2><p>Log your session attendance and weekly fellowship.</p></div>
 
+      <!-- Self-log attendance -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Log My Attendance</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.55">Log attendance for any session you attended. Your trainer will review and confirm after each service.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Session Type</div>
+            <select id="att-type" class="form-sel">
+              <option value="">— Select session —</option>
+              <optgroup label="Services">
+                <option value="Sunday Service">Sunday Service</option>
+                <option value="Tuesday Service">Tuesday Service</option>
+                <option value="Friday Immerse">Friday Immerse</option>
+              </optgroup>
+              <optgroup label="Prayer">
+                <option value="Morning Prayer">Morning Prayer</option>
+                <option value="Night Prayer">Night Prayer</option>
+              </optgroup>
+              <optgroup label="Training">
+                <option value="Physical Class">Physical Class (Sunday)</option>
+                <option value="Virtual Class">Virtual Class (Wednesday)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Date</div>
+            <input type="date" id="att-date" class="form-sel" style="cursor:pointer">
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:6px">Note (optional)</div>
+            <input type="text" id="att-note" class="form-sel" placeholder="e.g. Arrived 10 mins late">
+          </div>
+          <button class="btn btn-yellow" style="width:100%" onclick="selfLogAttendance()">Log Attendance ✓</button>
+        </div>
+        <div id="att-log-list" style="margin-top:16px;display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+
+      <!-- Fellowship tracking -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">This Week's Fellowship</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.55">Track your daily personal fellowship (30 mins min). Tap each day you spent time with God this week.</p>
+        <div class="prayer-grid">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">MON</div><div class="pg-dot" onclick="togglePrayer(this)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">TUE</div><div class="pg-dot" onclick="togglePrayer(this)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">WED</div><div class="pg-dot" onclick="togglePrayer(this)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">THU</div><div class="pg-dot" onclick="togglePrayer(this)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">FRI</div><div class="pg-dot" onclick="togglePrayer(this)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">SAT</div><div class="pg-dot" onclick="togglePrayer(this)"></div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">SUN</div><div class="pg-dot rest">Rest</div></div>
+        </div>
+        <button class="btn btn-yellow" style="margin-top:18px;width:100%" onclick="logTodayPrayer()">Log This Week's Fellowship</button>
+      </div>
+
+      <!-- Attendance history -->
+      <div class="card">
+        <div class="card-title">My Attendance Log <span id="att-count" class="ct-sub">Loading…</span></div>
+        <div id="att-history"><div style="color:var(--muted);font-size:13px">No sessions logged yet.</div></div>
+      </div>
+    </div>
